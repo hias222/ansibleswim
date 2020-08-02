@@ -1,4 +1,14 @@
-# Ansible to configer RPI
+# Ansible to configure RPI
+
+## overall
+
+* used ubuntu 18.04 64 bit
+* gpio seems not to work on ubuntu 20.04 64 bit (iomem=relaxed in cmdline.txt doesn't help)
+
+```bash
+2020-08-02 13:36:25 initPeripherals: mmap gpio failed (Operation not permitted)
+pigpio initialisation failed.
+```
 
 ## prepare RPI
 

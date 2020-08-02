@@ -6,7 +6,29 @@
   set_fact:
     key_value: npm
     npm_download_file: node-v12.18.3-linux-arm64
- 
+
+- name: "common | apt update "
+  become: true
+  apt:
+    update_cache: yes
+
+- name: "common | install packages "
+  become: true
+  apt:
+    pkg:
+    - gcc
+    - build-essential
+    - make
+    - cmake
+    - unzip
+    - python-setuptools 
+    - python3-setuptools
+    - libssl-dev
+    - jpnevulator
+    - mosquitto 
+    - mosquitto-clients
+    - nginx
+
 - name: "common | npm | extract {{ npm_download_file }}"
   become: true
   unarchive:
