@@ -15,6 +15,12 @@
 #make
 #sudo make install
 
+- name: "serial | create dir {{ serial_build_dir}}"
+  become: true
+  file:
+    path: "{{ serial_base_dir}}"
+    state: absent
+
 - name: "serial | create dir {{ serial_base_dir}}"
   become: true
   file:
@@ -61,24 +67,39 @@
     make
     make install
 
-- name: serial | checkout
+- name: serial | git checkout
   git:
     repo: https://github.com/hias222/serial.git
     dest: "{{ serial_base_dir}}"
 
-- name: colorado | stop service serial
+- name: colorado | disable service serial
+  become: true
   service:
     name: colorado
-    state: stopped
+    enabled: no
   ignore_errors: true
 
-- name: "serial | install serial"
+- name: colorado | disable service serial
+  become: true 
+  shell: rm -f /etc/systemd/system/colorado.service
+
+- name: "colorado | reboot"
+  become: true
+  reboot:
+    msg: "Reboot initiated by Ansible"
+    connect_timeout: 5
+    reboot_timeout: 600
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+    test_command: whoami
+
+- name: "serial | build serial"
   shell: | 
     cd {{serial_build_dir}}
     cmake {{serial_base_dir}}
     cmake --build {{serial_build_dir}}
 
-- name: "serial | install serial"
+- name: "serial | install colorado"
   become: true
   shell: | 
     cp {{serial_build_dir}}/serial /usr/bin/colorado
@@ -87,20 +108,23 @@
   become: true
   template:
     src: colorado.service
-    dest: /etc/systemd/system/colorado.service
+    dest: /lib/systemd/system/colorado.service
     owner: root
     group: root
-    mode: '0755'
+    mode: '0644'
+
+- name: colorado | Enable service colorado
+  become: true
+  service:
+    name: colorado
+    enabled: yes
 
 - name: colorado | Enable service serial
+  become: true
   service:
     name: colorado
     state: started
 
-- name: colorado | Enable service serial
-  service:
-    name: colorado
-    enabled: no
+
 
 # install -v -m 744 files/colorado.service "${ROOTFS_DIR}/etc/systemd/system"
-# ln -s /dev/ttyS0 /dev/serial0

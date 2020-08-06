@@ -2,8 +2,8 @@
 Description=colorado
 After=network.target
 
-[Service]
-ExecStart=/usr/bin/colorado
+[Service] 
+ExecStart=/usr/bin/colorado -z
 WorkingDirectory=/opt/colorado
 StandardOutput=inherit
 StandardError=inherit

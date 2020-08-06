@@ -7,6 +7,10 @@
     key_value: npm
     npm_download_file: node-v12.18.3-linux-arm64
 
+
+- name: "common add changeRPIstart"
+  include_tasks: changeRPIstart.yml
+
 - name: "common | apt update "
   become: true
   apt:
@@ -27,7 +31,7 @@
     - jpnevulator
     - mosquitto 
     - mosquitto-clients
-    - nginx
+    - nginx-full
 
 - name: "common | npm | extract {{ npm_download_file }}"
   become: true
