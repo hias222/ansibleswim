@@ -5,13 +5,17 @@
     datamapping_build_dir: /opt/datamapping/build
     datamapping_repo: https://github.com/hias222/datamapping.git
 
-# comdline.txt -relaxed
-# net.ifnames=0 dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=LABEL=writable rootfstype=ext4  elevator=deadline rootwait fixrtc iomem=relaxed
-#wget https://github.com/joan2937/pigpio/archive/master.zip
-#unzip master.zip
-#cd pigpio-master
-#make
-#sudo make install
+- name: "datamapping | pm2"
+  command: pm2 delete app.js --name backend
+  args:
+    chdir: "{{ datamapping_base_dir}}"
+  ignore_errors: true
+
+- name: "datamapping | pm2"
+  command: pm2 save
+  args:
+    chdir: "{{ datamapping_base_dir}}"
+  ignore_errors: true
 
 - name: "datamapping | create dir {{ datamapping_base_dir}}"
   become: true

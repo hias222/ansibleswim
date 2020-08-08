@@ -2,9 +2,21 @@
   set_fact:
     key_value: serial_data
     displaysocket_base_dir: /opt/displaysocket/base
-    displaysocket_build_dir: /opt/displaysocket/build
     displaysocket_repo: https://github.com/hias222/displaysocket.git
 
+
+- name: "displaysocket | pm2"
+  command: pm2 delete app.js --name socket
+  args:
+    chdir: "{{ displaysocket_base_dir}}"
+  ignore_errors: true
+  
+- name: "displaysocket | pm2"
+  command: pm2 save
+  args:
+    chdir: "{{ displaysocket_base_dir}}"
+  ignore_errors: true
+
 - name: "displaysocket | create dir {{ displaysocket_base_dir}}"
   become: true
   file:
@@ -20,20 +32,6 @@
     state: directory
     mode: '0755'
 
-- name: "displaysocket | create dir {{ displaysocket_build_dir}}"
-  become: true
-  file:
-    path: "{{ displaysocket_build_dir}}"
-    state: absent
-
-- name: "displaysocket | create dir {{ displaysocket_build_dir}}"
-  become: true
-  file:
-    path: "{{ displaysocket_build_dir}}"
-    owner: ubuntu
-    group: ubuntu
-    state: directory
-    mode: '0755'
 
 - name: "displaysocket | git checkout {{displaysocket_repo}}"
   git:
@@ -64,11 +62,6 @@
   npm:
     path: "{{ displaysocket_base_dir}}"
     state: latest
-
-- name: "displaysocket | env | copy environment"
-  template:
-    src: .env
-    dest: "{{ displaysocket_base_dir}}"
 
 - name: "displaysocket | pm2"
   command: pm2 start app.js --name socket
