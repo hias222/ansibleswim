@@ -7,9 +7,11 @@
     key_value: npm
     npm_download_file: node-v12.18.3-linux-arm64
 
-
-- name: "common add changeRPIstart"
-  include_tasks: changeRPIstart.yml
+- name: "common | set args for x86_64"
+  set_fact: 
+    key_value: npm
+    npm_download_file: node-v12.18.3-linux-x64
+  when: ansible_architecture=='x86_64'
 
 - name: "common | apt update "
   become: true
