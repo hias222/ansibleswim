@@ -1,10 +1,11 @@
-- name: "common | install base"
+- name: "common | install base | global_clean_all {{global_clean_all}}"
   debug: 
     msg: "install base"
 
 - name: "common | set args"
   set_fact:
     key_value: npm
+    clean_install: "{{global_clean_all}}"
     npm_download_file: node-v12.18.3-linux-arm64
 
 - name: "common | set args for x86_64"
@@ -41,6 +42,7 @@
   file:
     path: "/opt/{{ npm_download_file}}"
     state: absent
+  when: clean_install|bool
 
 - name: "common | create dir {{ npm_download_file}}"
   become: true
@@ -55,6 +57,7 @@
   unarchive:
     src: "{{ npm_download_file }}.tar.xz"
     dest: /opt
+  when: clean_install|bool
 
 - name: "common | npm | copy environment"
   become: true

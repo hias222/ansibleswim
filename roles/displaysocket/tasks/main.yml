@@ -1,10 +1,15 @@
-- name: displaysocket | set vars
+- name: "displaysocket | set vars | global_clean_all {{global_clean_all}}"
   set_fact:
     key_value: serial_data
+    clean_install: "{{global_clean_all}}"
     displaysocket_base_dir: /opt/displaysocket/base
     displaysocket_repo: https://github.com/hias222/displaysocket.git
 
-
+- name: "displaysocket | npm pm2 global"
+  npm:
+    name: pm2
+    global: yes
+    
 - name: "displaysocket | pm2"
   command: pm2 delete app.js --name socket
   args:
@@ -22,6 +27,7 @@
   file:
     path: "{{ displaysocket_base_dir}}"
     state: absent
+  when: clean_install|bool
 
 - name: "displaysocket | create dir {{ displaysocket_base_dir}}"
   become: true
@@ -37,6 +43,7 @@
   git:
     repo: "{{displaysocket_repo}}"
     dest: "{{ displaysocket_base_dir}}"
+    force: true
 
 - name: "displaysocket | npm express global"
   npm:
@@ -51,11 +58,6 @@
 - name: "displaysocket | npm jmespath global"
   npm:
     name: jmespath
-    global: yes
-
-- name: "displaysocket | npm pm2 global"
-  npm:
-    name: pm2
     global: yes
 
 - name: "displaysocket | Install {{ displaysocket_base_dir}} packages"

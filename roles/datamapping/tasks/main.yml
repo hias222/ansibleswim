@@ -1,9 +1,15 @@
-- name: datamapping | set vars
+- name: "datamapping | set vars | global_clean_all {{global_clean_all}}"
   set_fact:
     key_value: serial_data
+    clean_install: "{{global_clean_all}}"
     datamapping_base_dir: /opt/datamapping/base
     datamapping_build_dir: /opt/datamapping/build
     datamapping_repo: https://github.com/hias222/datamapping.git
+
+- name: "datamapping | npm pm2 global"
+  npm:
+    name: pm2
+    global: yes
 
 - name: "datamapping | pm2"
   command: pm2 delete app.js --name backend
@@ -22,6 +28,7 @@
   file:
     path: "{{ datamapping_base_dir}}"
     state: absent
+  when: clean_install|bool
 
 - name: "datamapping | create dir {{ datamapping_base_dir}}"
   become: true
@@ -37,6 +44,7 @@
   file:
     path: "{{ datamapping_build_dir}}"
     state: absent
+  when: clean_install|bool
 
 - name: "datamapping | create dir {{ datamapping_build_dir}}"
   become: true
@@ -51,6 +59,7 @@
   git:
     repo: "{{datamapping_repo}}"
     dest: "{{ datamapping_base_dir}}"
+    force: true
 
 - name: "datamapping | npm express global"
   npm:
@@ -67,11 +76,6 @@
     name: jmespath
     global: yes
 
-- name: "datamapping | npm pm2 global"
-  npm:
-    name: pm2
-    global: yes
-
 - name: "datamapping | Install {{ datamapping_base_dir}} packages"
   npm:
     path: "{{ datamapping_base_dir}}"
@@ -82,8 +86,8 @@
     src: .env
     dest: "{{ datamapping_base_dir}}"
 
-- name: "datamapping | pm2"
-  command: pm2 start app.js --name backend
+- name: "datamapping | pm2 start"
+  command: pm2 start app.js --name backend -f
   args:
     chdir: "{{ datamapping_base_dir}}"
 
