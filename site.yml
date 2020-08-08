@@ -1,3 +1,4 @@
 - import_playbook: baseinstall.yml
 - import_playbook: raspberry.yml
 # - import_playbook: serialinstall.yml
+- import_playbook: datamapping.yml

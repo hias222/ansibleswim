@@ -23,11 +23,12 @@
   apt:
     pkg:
     - gcc
+    - git
     - build-essential
     - make
     - cmake
     - unzip
-    - python-setuptools 
+    # - python-setuptools 
     - python3-setuptools
     - libssl-dev
     - jpnevulator
@@ -35,8 +36,22 @@
     - mosquitto-clients
     - nginx-full
 
-- name: "common | npm | extract {{ npm_download_file }}"
+- name: "common | create dir {{ npm_download_file}}"
   become: true
+  file:
+    path: "/opt/{{ npm_download_file}}"
+    state: absent
+
+- name: "common | create dir {{ npm_download_file}}"
+  become: true
+  file:
+    path: "/opt/{{ npm_download_file}}"
+    owner: ubuntu
+    group: ubuntu
+    state: directory
+    mode: '0755'
+
+- name: "common | npm | extract {{ npm_download_file }}"
   unarchive:
     src: "{{ npm_download_file }}.tar.xz"
     dest: /opt
