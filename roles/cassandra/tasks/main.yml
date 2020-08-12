@@ -1,0 +1,90 @@
+- name: "cassandra | install"
+  debug:
+    msg: "start"
+
+- name: "cassandra | set args | clean is {{global_clean_all}}"
+  set_fact:
+    key_value: npm
+    clean_install: "{{global_clean_all}}"
+    cassandra_base_dir: /opt/cassandra
+    cassandra_file: apache-cassandra-3.11.7
+
+- name: "cassandra | apt update "
+  become: true
+  apt:
+    update_cache: yes
+
+- name: "cassandra | install packages "
+  become: true
+  apt:
+    pkg:
+    - openjdk-8-jdk
+
+- name: cassandra | Stop service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: stopped
+  
+- name: cassandra | Disable service cassandra
+  become: true
+  service:
+    name: cassandra
+    enabled: no
+
+- name: cassandra | reload systemd
+  become: true
+  shell: | 
+    systemctl daemon-reload
+    
+- name: cassandra | disable service cassandra
+  become: true 
+  shell: rm -f /etc/systemd/system/cassandra.service
+
+- name: "cassandra | remove dir {{cassandra_base_dir}}"
+  become: true
+  file:
+    path: "{{ cassandra_base_dir}}"
+    state: absent
+  when: clean_install|bool
+
+- name: "cassandra | create dir {{ cassandra_base_dir}}"
+  become: true
+  file:
+    path: "{{ cassandra_base_dir}}"
+    owner: ubuntu
+    group: ubuntu
+    state: directory
+    mode: '0755'
+
+- name: "cassandra | extract {{ cassandra_base_dir }}"
+  unarchive:
+    src: "{{ cassandra_file }}-bin.tar.gz"
+    dest: "{{cassandra_base_dir}}"
+  when: clean_install|bool
+
+- name: "cassandra | install service "
+  become: true
+  template:
+    src: cassandra.service
+    dest: /lib/systemd/system/cassandra.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: cassandra | reload systemd
+  become: true
+  shell: | 
+    systemctl daemon-reload
+
+- name: cassandra | Enable service colorado
+  become: true
+  service:
+    name: cassandra
+    enabled: yes
+
+- name: cassandra | Enable service serial
+  become: true
+  service:
+    name: cassandra
+    state: started

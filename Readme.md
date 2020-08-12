@@ -16,3 +16,13 @@ pigpio initialisation failed.
 ssl-keygen 
 # copy pub file to authorized_keys
 ```
+
+## Install
+
+### normal Install
+
+ansible-playbook site.yml -i inventories/production/hosts --limit vmbox
+
+### overwrite globals
+
+ansible-playbook cassandra.yml -i inventories/production/hosts --limit vmbox -e global_clean_all=true
