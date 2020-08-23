@@ -3,7 +3,6 @@
     key_value: serial_data
     clean_install: "{{global_clean_all}}"
     nginx_config_dir: /etc/nginx/sites-available/
-    nginx_html_dir: /usr/share/nginx/html
     displayweb_base_dir: /opt/displayweb/base
     displayweb_repo: https://github.com/hias222/displayweb.git
 

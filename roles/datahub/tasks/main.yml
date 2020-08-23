@@ -54,5 +54,17 @@
     chdir: "{{ datahub_base_dir}}"
 
 
-    
+- name: "datahub | create dir {{ nginx_html_dir }}/datahub"
+  become: true
+  file:
+    path: "{{ nginx_html_dir}}/datahub"
+    owner: ubuntu
+    group: ubuntu
+    state: directory
+    mode: '0755'
+  
+- name: "datahub | copy files to nginx {{ nginx_html_dir}}/datahub"
+  shell: 
+    cmd: "cp -R * {{ nginx_html_dir}}/datahub"
+    chdir: "{{ datahub_base_dir}}/dist"
 
