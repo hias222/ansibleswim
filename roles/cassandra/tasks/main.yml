@@ -31,15 +31,17 @@
   service:
     name: cassandra
     enabled: no
+    
+- name: cassandra | remove service cassandra
+  become: true 
+  file:
+    path: /etc/systemd/system/cassandra.service
+    state: absent
 
 - name: cassandra | reload systemd
   become: true
   shell: | 
     systemctl daemon-reload
-    
-- name: cassandra | disable service cassandra
-  become: true 
-  shell: rm -f /etc/systemd/system/cassandra.service
 
 - name: "cassandra | remove dir {{cassandra_base_dir}}"
   become: true
@@ -77,13 +79,13 @@
   shell: | 
     systemctl daemon-reload
 
-- name: cassandra | Enable service colorado
+- name: cassandra | Enable service cassandra
   become: true
   service:
     name: cassandra
     enabled: yes
 
-- name: cassandra | Enable service serial
+- name: cassandra | start service cassandra
   become: true
   service:
     name: cassandra

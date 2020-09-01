@@ -4,6 +4,7 @@ After=network.target
 
 [Service] 
 PIDFile=/run/cassandra/cassandra.pid
+RuntimeDirectory=cassandra
 User=ubuntu
 Group=ubuntu
 ExecStart={{cassandra_base_dir}}/{{cassandra_file}}/bin/cassandra -p /run/cassandra/cassandra.pid

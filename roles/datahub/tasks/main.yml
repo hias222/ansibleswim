@@ -3,8 +3,13 @@
     key_value: serial_data
     clean_install: "{{global_clean_all}}"
     datahub_base_dir: /opt/datahub
+    datahub_server_dir: /opt/datahubserver
     datahub_repo: https://github.com/hias222/datahub.git
 
+- name: "displayweb | ufw allow 8080"
+  become: true
+  shell: 
+    cmd: ufw allow 8080
 
 - name: "datahub | remove dir {{datahub_base_dir}}"
   become: true
@@ -34,7 +39,7 @@
     state: latest
 
 
-- name: "datahub | create dir {{ datahub_base_dir}}"
+- name: "datahub | create dir {{ datahub_base_dir}}/env"
   become: true
   file:
     path: "{{ datahub_base_dir}}/env"
@@ -53,18 +58,37 @@
     cmd: npm run build
     chdir: "{{ datahub_base_dir}}"
 
-
-- name: "datahub | create dir {{ nginx_html_dir }}/datahub"
+- name: "datahub | create dir {{ datahub_server_dir }}"
   become: true
   file:
-    path: "{{ nginx_html_dir}}/datahub"
+    path: "{{ datahub_server_dir}}"
     owner: ubuntu
     group: ubuntu
     state: directory
     mode: '0755'
   
-- name: "datahub | copy files to nginx {{ nginx_html_dir}}/datahub"
+- name: "datahub | copy files to server dir {{ datahub_server_dir}}"
   shell: 
-    cmd: "cp -R * {{ nginx_html_dir}}/datahub"
+    cmd: "cp -R * {{ datahub_server_dir}}"
     chdir: "{{ datahub_base_dir}}/dist"
 
+- name: "datahub | Install npm {{ datahub_server_dir}} packages"
+  npm:
+    path: "{{ datahub_server_dir}}"
+    state: latest
+
+- name: "datahub | pm2 clear"
+  command: pm2 delete datahub 
+  args:
+    chdir: "{{ datahub_server_dir}}"
+  ignore_errors: true
+
+- name: "datahub | pm2 start"
+  command: pm2 start "npm run start" --name datahub -f
+  args:
+    chdir: "{{ datahub_server_dir}}"
+
+- name: "datahub | pm2"
+  command: pm2 save
+  args:
+    chdir: "{{ datahub_server_dir}}"

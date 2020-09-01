@@ -10,6 +10,11 @@
   debug:
     msg: on ubuntu change firewall sudo ufw allow http
 
+- name: "displayweb | ufw allow http"
+  become: true
+  shell: 
+    cmd: ufw allow http
+
 - name: "displayweb | env | copy environment"
   become: true
   template:

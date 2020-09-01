@@ -9,6 +9,11 @@
   npm:
     name: pm2
     global: yes
+
+- name: "displayweb | ufw allow 4001"
+  become: true
+  shell: 
+    cmd: ufw allow 4001
     
 - name: "displaysocket | pm2"
   command: pm2 delete app.js --name socket
