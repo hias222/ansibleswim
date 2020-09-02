@@ -68,6 +68,7 @@
 - name: "displaysocket | Install {{ displaysocket_base_dir}} packages"
   npm:
     path: "{{ displaysocket_base_dir}}"
+    global: no
     state: latest
 
 - name: "displaysocket | pm2"

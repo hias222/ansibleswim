@@ -23,12 +23,14 @@
   service:
     name: cassandra
     state: stopped
+  ignore_errors: true
   
 - name: cassandra | Disable service cassandra
   become: true
   service:
     name: cassandra
     enabled: no
+  ignore_errors: true
     
 - name: cassandra | remove service cassandra
   become: true 

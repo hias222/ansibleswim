@@ -36,6 +36,11 @@
     - mosquitto 
     - mosquitto-clients
     - nginx-full
+- name: "common | install pyython for cassandra "
+  become: true
+  apt:
+    pkg:
+    - python2.7
 
 - name: "common | create dir {{ npm_download_file}}"
   become: true

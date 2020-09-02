@@ -49,6 +49,7 @@
 - name: "displayweb | Install {{ displayweb_base_dir}} packages"
   npm:
     path: "{{ displayweb_base_dir}}"
+    global: no
     state: latest
 
 - name: "datamapping | env | copy environment"

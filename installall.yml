@@ -7,3 +7,4 @@
 - import_playbook: adminweb.yml
 - import_playbook: cassandra.yml
 - import_playbook: datahub.yml
+- import_playbook: frontend.yml

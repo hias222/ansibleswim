@@ -1,5 +1,7 @@
+# npm and cassandra bins install with global true
 global_clean_all: false
 nginx_display_dir: /usr/share/nginx/html/display
+nginx_frontend_dir: /usr/share/nginx/html/frontend
 nginx_admin_dir: /usr/share/nginx/html/admin
 nginx_html_dir: /usr/share/nginx/html
 cassandra_base_dir: /opt/cassandra
