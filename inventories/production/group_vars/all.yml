@@ -1,5 +1,6 @@
 global_clean_all: false
 nginx_display_dir: /usr/share/nginx/html/display
 nginx_admin_dir: /usr/share/nginx/html/admin
+nginx_html_dir: /usr/share/nginx/html
 cassandra_base_dir: /opt/cassandra
 cassandra_file: apache-cassandra-3.11.7

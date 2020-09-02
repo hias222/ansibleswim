@@ -49,6 +49,14 @@ server {
       proxy_set_header Connection "upgrade";
     }
 
+	location ^~ /admin {
+   		try_files $uri $uri/ /admin/index.html;
+	}
+
+	location ^~ /display {
+   		try_files $uri $uri/ /display/index.html;
+	}
+
 }
 
 

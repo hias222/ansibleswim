@@ -4,6 +4,12 @@
     src: default
     dest: "{{ nginx_config_dir}}"
 
+- name: "displayweb | nginx | copy index"
+  become: true
+  template:
+    src: index.html
+    dest: "{{ nginx_html_dir}}"
+
 - name: displayweb | nginx | Enable service nginx
   become: true
   service:
