@@ -4,5 +4,6 @@
 - import_playbook: datamapping.yml
 - import_playbook: displaysocket.yml
 - import_playbook: displayweb.yml
+- import_playbook: adminweb.yml
 - import_playbook: cassandra.yml
 - import_playbook: datahub.yml

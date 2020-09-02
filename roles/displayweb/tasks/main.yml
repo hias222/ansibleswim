@@ -31,6 +31,15 @@
     state: directory
     mode: '0755'
 
+- name: "displayweb | create dir {{ nginx_display_dir}}"
+  become: true
+  file:
+    path: "{{ nginx_display_dir}}"
+    owner: ubuntu
+    group: ubuntu
+    state: directory
+    mode: '0755'
+
 - name: "displayweb | git checkout {{displayweb_repo}}"
   git:
     repo: "{{displayweb_repo}}"
@@ -52,8 +61,8 @@
     cmd: npm run build
     chdir: "{{ displayweb_base_dir}}"
 
-- name: "displayweb | mv {{displayweb_base_dir}} to  {{nginx_html_dir}}"
+- name: "displayweb | mv {{displayweb_base_dir}} to  {{nginx_display_dir}}"
   become: true
-  shell: cp -rf {{displayweb_base_dir}}/build/* {{nginx_html_dir}}
+  shell: cp -rf {{displayweb_base_dir}}/build/* {{nginx_display_dir}}
   
 - include_tasks: nginx.yml
