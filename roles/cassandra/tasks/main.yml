@@ -6,8 +6,6 @@
   set_fact:
     key_value: npm
     clean_install: "{{global_clean_all}}"
-    cassandra_base_dir: /opt/cassandra
-    cassandra_file: apache-cassandra-3.11.7
 
 - name: "cassandra | apt update "
   become: true

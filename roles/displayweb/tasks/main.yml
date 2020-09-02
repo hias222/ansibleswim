@@ -15,12 +15,6 @@
   shell: 
     cmd: ufw allow http
 
-- name: "displayweb | env | copy environment"
-  become: true
-  template:
-    src: default
-    dest: "{{ nginx_config_dir}}"
-
 - name: "displayweb | remove dir {{displayweb_base_dir}}"
   become: true
   file:
@@ -61,17 +55,5 @@
 - name: "displayweb | mv {{displayweb_base_dir}} to  {{nginx_html_dir}}"
   become: true
   shell: cp -rf {{displayweb_base_dir}}/build/* {{nginx_html_dir}}
-    
-- name: displayweb | Enable service colorado
-  become: true
-  service:
-    name: nginx
-    enabled: yes
-
-- name: displayweb | Enable service colorado
-  become: true
-  service:
-    name: nginx
-    state: restarted
-
-# install -v -m 744 files/colorado.service "${ROOTFS_DIR}/etc/systemd/system"
+  
+- include_tasks: nginx.yml

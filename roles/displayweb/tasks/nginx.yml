@@ -1,0 +1,17 @@
+- name: "displayweb | nginx | copy environment"
+  become: true
+  template:
+    src: default
+    dest: "{{ nginx_config_dir}}"
+
+- name: displayweb | nginx | Enable service nginx
+  become: true
+  service:
+    name: nginx
+    enabled: yes
+
+- name: displayweb | nginx | Restart service nginx
+  become: true
+  service:
+    name: nginx
+    state: restarted

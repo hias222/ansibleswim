@@ -77,6 +77,8 @@
     path: "{{ datahub_server_dir}}"
     state: latest
 
+- include_tasks: data.yml
+
 - name: "datahub | pm2 clear"
   command: pm2 delete datahub 
   args:
