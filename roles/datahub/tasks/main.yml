@@ -11,6 +11,9 @@
   shell: 
     cmd: ufw allow 8080
 
+- name: "displayweb | pm2 stop all"
+  command: pm2 stop all
+
 - name: "datahub | remove dir {{datahub_base_dir}}"
   become: true
   file:
@@ -79,6 +82,7 @@
     state: latest
 
 - include_tasks: data.yml
+  ignore_errors: true
 
 - name: "datahub | pm2 clear"
   command: pm2 delete datahub 
@@ -90,6 +94,9 @@
   command: pm2 start "npm run start" --name datahub -f
   args:
     chdir: "{{ datahub_server_dir}}"
+
+- name: "displayweb | pm2 start all"
+  command: pm2 start all
 
 - name: "datahub | pm2"
   command: pm2 save

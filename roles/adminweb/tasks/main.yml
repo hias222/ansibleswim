@@ -1,9 +1,16 @@
 - name: "adminweb | set vars | global_clean_all {{global_clean_all}}"
   set_fact:
     key_value: adminweb
+    arm_architecture: true
     clean_install: "{{global_clean_all}}"
     adminweb_base_dir: /opt/adminweb/base
     adminweb_repo: https://github.com/hias222/adminweb.git
+
+- name: "adminweb | set args for x86_64"
+  set_fact: 
+    key_value: adminweb
+    arm_architecture: false
+  when: ansible_architecture=='x86_64'
 
 - name: "adminweb | remove dir {{adminweb_base_dir}}"
   become: true
@@ -11,6 +18,9 @@
     path: "{{ adminweb_base_dir}}"
     state: absent
   when: clean_install|bool
+
+- name: "adminweb | pm2 stop all"
+  command: pm2 stop all
 
 - name: "adminweb | create dir {{ adminweb_base_dir}}"
   become: true
@@ -41,10 +51,14 @@
     path: "{{ adminweb_base_dir}}"
     state: latest
 
-- name: "datamapping | env | copy environment"
+- name: "adminweb | env | copy environment"
   template:
     src: .env
     dest: "{{ adminweb_base_dir}}"
+
+- name: "adminweb | compile sass"
+  command: npm rebuild node-sass
+  when: arm_architecture|bool
 
 - name: "adminweb | build {{ adminweb_base_dir}}"
   shell: 
@@ -55,3 +69,5 @@
   become: true
   shell: cp -rf {{adminweb_base_dir}}/build/* {{nginx_admin_dir}}
   
+- name: "adminweb | pm2 start all"
+  command: pm2 start all

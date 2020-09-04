@@ -2,6 +2,9 @@
   debug:
     msg: "start"
 
+- name: "cassandra | pm2 stop all"
+  command: pm2 stop all
+
 - name: "cassandra | set args | clean is {{global_clean_all}}"
   set_fact:
     key_value: npm
@@ -11,12 +14,14 @@
   become: true
   apt:
     update_cache: yes
+  when: clean_install|bool
 
 - name: "cassandra | install packages "
   become: true
   apt:
     pkg:
     - openjdk-8-jdk
+  when: clean_install|bool
 
 - name: cassandra | Stop service cassandra
   become: true
@@ -90,3 +95,6 @@
   service:
     name: cassandra
     state: started
+
+- name: "cassandra | pm2 start all"
+  command: pm2 start all

@@ -4,7 +4,17 @@
     clean_install: "{{global_clean_all}}"
     nginx_config_dir: /etc/nginx/sites-available/
     displayweb_base_dir: /opt/displayweb/base
+    arm_architecture: true
     displayweb_repo: https://github.com/hias222/displayweb.git
+
+- name: "common | set args for x86_64"
+  set_fact: 
+    key_value: serial_data
+    arm_architecture: false
+  when: ansible_architecture=='x86_64'
+
+- name: "displayweb | pm2 stop all"
+  command: pm2 stop all
 
 - name: "displaywen | debug"
   debug:
@@ -57,6 +67,12 @@
     src: .env
     dest: "{{ displayweb_base_dir}}"
 
+- name: "datamapping | compile sass"
+  command: npm rebuild node-sass
+  when: arm_architecture|bool
+
+# npm rebuild node-sass ??
+
 - name: "displayweb | build {{ displayweb_base_dir}}"
   shell: 
     cmd: npm run build
@@ -67,3 +83,6 @@
   shell: cp -rf {{displayweb_base_dir}}/build/* {{nginx_display_dir}}
   
 - include_tasks: nginx.yml
+
+- name: "displayweb | pm2 start all"
+  command: pm2 start all

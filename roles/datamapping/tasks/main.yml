@@ -6,10 +6,6 @@
     datamapping_build_dir: /opt/datamapping/build
     datamapping_repo: https://github.com/hias222/datamapping.git
 
-- name: "datamapping | npm pm2 global"
-  npm:
-    name: pm2
-    global: yes
 
 - name: "datamapping | pm2"
   command: pm2 delete app.js --name backend
@@ -34,8 +30,8 @@
   become: true
   file:
     path: "{{ datamapping_base_dir}}"
-    owner: ubuntu
-    group: ubuntu
+    owner: "{{ install_user_os }}"
+    group: "{{ install_user_os }}"
     state: directory
     mode: '0755'
 
@@ -50,8 +46,8 @@
   become: true
   file:
     path: "{{ datamapping_build_dir}}"
-    owner: ubuntu
-    group: ubuntu
+    owner: "{{ install_user_os }}"
+    group: "{{ install_user_os }}"
     state: directory
     mode: '0755'
 

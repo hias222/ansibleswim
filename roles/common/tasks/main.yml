@@ -80,3 +80,45 @@
 - name: "common | check npm"
   debug: 
     msg: "{{shell_output.stdout_lines}}"
+
+- name: "common | npm pm2 global"
+  npm:
+    name: pm2
+    global: yes
+
+- name: "common | delete pm2 folder /home/{{ install_user_os }}/.pm2"
+  become: true
+  file:
+    path: "/home/{{ install_user_os }}/.pm2"
+    state: absent
+  when: clean_install|bool
+
+- name: "common | npm | reset ssh connection"
+  meta: reset_connection
+
+- name: "common | start pm2 | prepare scripts"
+  command: pm2 startup ubuntu -u {{ install_user_os }} --hp /home/{{ install_user_os }}
+  when: clean_install|bool
+  ignore_errors: true
+
+- name: "common | start pm2 | /opt/{{ npm_download_file}}/bin"
+  command: sudo env PATH=$PATH:/opt/{{ npm_download_file}}/bin pm2 startup ubuntu -u {{ install_user_os }} --hp /home/{{ install_user_os }}
+  register: output
+  when: clean_install|bool
+
+# become_user: root
+# become_method: enable
+# /opt/{{ npm_download_file}}/bin/pm2 startup {{ install_user_os }} -u {{ install_user_os }} --hp /home/{{ install_user_os }}
+# sudo env PATH=$PATH:/opt/node-v12.18.3-linux-x64/bin pm2 startup ubuntu -u ubuntu --hp /home/ubuntu"]}
+
+- name: common | debug 
+  debug:
+    msg: "{{output.stdout}}"
+  when: clean_install|bool
+
+- name: "colorado | disable service pm2-{{ install_user_os }}"
+  become: true
+  service:
+    name: "pm2-{{ install_user_os }}"
+    enabled: yes
+  ignore_errors: true

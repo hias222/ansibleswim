@@ -1,6 +1,7 @@
-- import_playbook: baseinstall.yml
-# - import_playbook: raspberry.yml
-# - import_playbook: serialinstall.yml
+- import_playbook: serviceoff.yml
+- import_playbook: common.yml
+- import_playbook: raspberry.yml
+- import_playbook: serialinstall.yml
 - import_playbook: datamapping.yml
 - import_playbook: displaysocket.yml
 - import_playbook: displayweb.yml

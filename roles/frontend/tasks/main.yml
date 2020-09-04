@@ -1,9 +1,16 @@
 - name: "frontend | set vars | global_clean_all {{global_clean_all}}"
   set_fact:
     key_value: serial_data
+    arm_architecture: true
     clean_install: "{{global_clean_all}}"
     frontend_base_dir: /opt/frontend/base
     frontend_repo: https://github.com/hias222/frontend.git
+
+- name: "frontend | set args for x86_64"
+  set_fact: 
+    key_value: serial_data
+    arm_architecture: false
+  when: ansible_architecture=='x86_64'
 
 - name: "frontend | remove dir {{frontend_base_dir}}"
   become: true
@@ -11,6 +18,9 @@
     path: "{{ frontend_base_dir}}"
     state: absent
   when: clean_install|bool
+
+- name: "frontend | pm2 stop all"
+  command: pm2 stop all
 
 - name: "frontend | create dir {{ frontend_base_dir}}"
   become: true
@@ -42,10 +52,14 @@
     global: no
     state: latest
 
-- name: "datamapping | env | copy environment"
+- name: "frontend | env | copy environment"
   template:
     src: .env
     dest: "{{ frontend_base_dir}}"
+
+- name: "frontend | compile sass"
+  command: npm rebuild node-sass
+  when: arm_architecture|bool
 
 - name: "frontend | build {{ frontend_base_dir}}"
   shell: 
@@ -55,3 +69,6 @@
 - name: "frontend | mv {{frontend_base_dir}} to  {{nginx_frontend_dir}}"
   become: true
   shell: cp -rf {{frontend_base_dir}}/build/* {{nginx_frontend_dir}}
+
+- name: "frontend | pm2 start all"
+  command: pm2 start all
