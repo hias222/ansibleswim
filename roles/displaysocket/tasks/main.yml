@@ -71,6 +71,11 @@
     global: no
     state: latest
 
+- name: "displaysocket | env | copy environment"
+  template:
+    src: .env
+    dest: "{{ displaysocket_base_dir}}"
+
 - name: "displaysocket | pm2"
   command: pm2 start app.js --name socket
   args:

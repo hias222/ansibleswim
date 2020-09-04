@@ -95,7 +95,7 @@
   args:
     chdir: "{{ datahub_server_dir}}"
 
-- name: "displayweb | pm2 start all"
+- name: "datahub | pm2 start all"
   command: pm2 start all
 
 - name: "datahub | pm2"
