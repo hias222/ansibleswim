@@ -56,6 +56,17 @@
     dest: "{{ displayweb_base_dir}}"
     force: yes
 
+- name: "displayweb | install node-sass"
+  npm:
+    name: node-sass
+    state: latest
+    path: "{{ displayweb_base_dir}}"
+  ignore_errors: true
+
+- name: "displayweb | compile sass"
+  command: npm rebuild node-sass
+  when: arm_architecture|bool
+
 - name: "displayweb | Install {{ displayweb_base_dir}} packages"
   npm:
     path: "{{ displayweb_base_dir}}"
@@ -66,10 +77,6 @@
   template:
     src: .env
     dest: "{{ displayweb_base_dir}}"
-
-- name: "datamapping | compile sass"
-  command: npm rebuild node-sass
-  when: arm_architecture|bool
 
 # npm rebuild node-sass ??
 

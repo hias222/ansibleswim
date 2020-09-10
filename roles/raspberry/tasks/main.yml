@@ -5,8 +5,6 @@
 - name: "common | set args"
   set_fact:
     key_value: npm
-    npm_download_file: node-v12.18.3-linux-arm64
-
 
 - name: "common add changeRPIstart"
   include_tasks: changeRPIstart.yml
@@ -33,25 +31,9 @@
     - mosquitto-clients
     - nginx-full
 
-- name: "common | npm | extract {{ npm_download_file }}"
-  become: true
-  unarchive:
-    src: "{{ npm_download_file }}.tar.xz"
-    dest: /opt
-
 - name: "common | npm | copy environment"
   become: true
   template:
     src: environment
     dest: /etc/environment
 
-- name: "common | npm | reset ssh connection"
-  meta: reset_connection
-
-- name: "common | npm | run node -v"
-  shell: node -v
-  register: shell_output
-
-- name: "common | check npm"
-  debug: 
-    msg: "{{shell_output.stdout_lines}}"

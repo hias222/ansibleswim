@@ -1,0 +1,55 @@
+- name: serial-sender | set vars
+  set_fact:
+    key_value: serial-sender_data
+    serial_sender_base_dir: /opt/serial-sender/source
+    serial_sender_build_dir: /opt/serial-sender/build
+
+- name: "serial-sender | create dir {{ serial_sender_build_dir}}"
+  become: true
+  file:
+    path: "{{ serial_sender_base_dir}}"
+    state: absent
+
+- name: "serial_sender | create dir {{ serial_sender_base_dir}}"
+  become: true
+  file:
+    path: "{{ serial_sender_base_dir}}"
+    owner: ubuntu
+    group: ubuntu
+    state: directory
+    mode: '0755'
+
+- name: "serial-sender | create dir {{ serial_sender_build_dir}}"
+  become: true
+  file:
+    path: "{{ serial_sender_build_dir}}"
+    state: absent
+
+- name: "serial-sender | create dir {{ serial_sender_build_dir}}"
+  become: true
+  file:
+    path: "{{ serial_sender_build_dir}}"
+    owner: ubuntu
+    group: ubuntu
+    state: directory
+    mode: '0755'
+
+- name: serial-sender | git checkout
+  git:
+    repo: https://github.com/hias222/serial-sender.git
+    dest: "{{ serial_sender_base_dir}}"
+
+
+- name: "serial-sender | build serial-sender"
+  shell: | 
+    cd {{serial_sender_build_dir}}
+    cmake {{serial_sender_base_dir}}
+    cmake --build {{serial_sender_build_dir}}
+
+- name: "serial-sender | test.txt "
+  template:
+    src: test.txt
+    dest: "{{serial_sender_build_dir}}"
+    owner: ubuntu
+    group: ubuntu
+    mode: '0644'

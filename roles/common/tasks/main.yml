@@ -1,6 +1,6 @@
 - name: "common | install base | global_clean_all {{global_clean_all}}"
   debug: 
-    msg: "install base"
+    msg: "install base {{ ansible_architecture }}"
 
 - name: "common | set args"
   set_fact:
@@ -13,6 +13,12 @@
     key_value: npm
     npm_download_file: node-v12.18.3-linux-x64
   when: ansible_architecture=='x86_64'
+
+- name: "common | set args for armv7l"
+  set_fact: 
+    key_value: npm
+    npm_download_file: node-v12.18.3-linux-armv7l
+  when: ansible_architecture=='armv7l'
 
 - name: "common | apt update "
   become: true
@@ -36,11 +42,18 @@
     - mosquitto 
     - mosquitto-clients
     - nginx-full
-- name: "common | install pyython for cassandra "
+
+- name: "common | install python2.7 for cassandra "
   become: true
   apt:
     pkg:
     - python2.7
+
+- name: "common | install python node-sass "
+  become: true
+  apt:
+    pkg:
+    - python
 
 - name: "common | create dir {{ npm_download_file}}"
   become: true
