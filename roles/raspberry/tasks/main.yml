@@ -31,9 +31,3 @@
     - mosquitto-clients
     - nginx-full
 
-- name: "common | npm | copy environment"
-  become: true
-  template:
-    src: environment
-    dest: /etc/environment
-

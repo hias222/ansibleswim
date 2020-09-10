@@ -5,8 +5,9 @@ After=network.target
 [Service] 
 ExecStart=/usr/bin/colorado -z
 WorkingDirectory=/opt/colorado
-StandardOutput=inherit
-StandardError=inherit
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=colorado
 Restart=always
 User=root
 
