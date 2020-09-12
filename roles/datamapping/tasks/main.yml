@@ -6,7 +6,6 @@
     datamapping_build_dir: /opt/datamapping/build
     datamapping_repo: https://github.com/hias222/datamapping.git
 
-
 - name: "datamapping | pm2"
   command: pm2 delete app.js --name backend
   args:
