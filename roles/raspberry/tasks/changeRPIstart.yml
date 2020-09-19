@@ -11,6 +11,15 @@
     group: root
     mode: '0755'
      
+- name: "common | changeRPIstart | copy usercfg.txt"
+  become: true
+  copy:
+    src: usercfg.txt
+    dest: /boot/firmware/usercfg.txt
+    owner: root
+    group: root
+    mode: '0755'
+
 - name: "common | changeRPIstart | reboot"
   become: true
   reboot:

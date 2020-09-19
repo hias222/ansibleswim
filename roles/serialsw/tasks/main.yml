@@ -1,0 +1,59 @@
+- name: serialsw | set vars
+  set_fact:
+    key_value: serial_data
+    serial_base_dir: /opt/colorado/serial
+    serial_build_dir: /opt/colorado/build
+    pogio_master_file: pigpio-master.zip
+    pigpio_base_dir: /opt/colorado/pigpio
+
+
+# comdline.txt -relaxed
+# net.ifnames=0 dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=LABEL=writable rootfstype=ext4  elevator=deadline rootwait fixrtc iomem=relaxed
+#wget https://github.com/joan2937/pigpio/archive/master.zip
+#unzip master.zip
+#cd pigpio-master
+#make
+#sudo make install
+
+- name: "serialsw | delete dir {{ serial_base_dir}}"
+  become: true
+  file:
+    path: "{{ serial_base_dir}}"
+    state: absent
+
+- name: "serialsw | create dir {{ serial_base_dir}}"
+  become: true
+  file:
+    path: "{{ serial_base_dir}}"
+    owner: ubuntu
+    group: ubuntu
+    state: directory
+    mode: '0755'
+
+- name: "serialsw | delete dir {{ serial_build_dir}}"
+  become: true
+  file:
+    path: "{{ serial_build_dir}}"
+    state: absent
+
+- name: "serialsw | create dir {{ serial_build_dir}}"
+  become: true
+  file:
+    path: "{{ serial_build_dir}}"
+    owner: ubuntu
+    group: ubuntu
+    state: directory
+    mode: '0755'
+
+- name: serialsw | git checkout
+  git:
+    repo: https://github.com/hias222/serial.git
+    dest: "{{ serial_base_dir}}"
+
+- name: "serialsw | build serial"
+  shell: | 
+    cd {{serial_build_dir}}
+    cmake {{serial_base_dir}}
+    cmake --build {{serial_build_dir}}
+
+# install -v -m 744 files/colorado.service "${ROOTFS_DIR}/etc/systemd/system"
