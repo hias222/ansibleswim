@@ -6,6 +6,15 @@
     pogio_master_file: pigpio-master.zip
     pigpio_base_dir: /opt/colorado/pigpio
 
+- name: Show facts available on the system
+  ansible.builtin.debug:
+    var: ansible_facts
+
+- name: Shut down CentOS 6 systems
+  ansible.builtin.command: /sbin/shutdown -t now
+  when:
+      - ansible_facts['distribution'] == "CentOS"
+      - ansible_facts['distribution_major_version'] == "6"
 
 # comdline.txt -relaxed
 # net.ifnames=0 dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=LABEL=writable rootfstype=ext4  elevator=deadline rootwait fixrtc iomem=relaxed

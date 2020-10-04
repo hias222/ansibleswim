@@ -5,15 +5,13 @@
     serial_build_dir: /opt/colorado/build
     pogio_master_file: pigpio-master.zip
     pigpio_base_dir: /opt/colorado/pigpio
+    linux_x86_64: false
+    linux_64_armv8: false
 
+- import_tasks: copylibs.yml
 
 # comdline.txt -relaxed
 # net.ifnames=0 dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=LABEL=writable rootfstype=ext4  elevator=deadline rootwait fixrtc iomem=relaxed
-#wget https://github.com/joan2937/pigpio/archive/master.zip
-#unzip master.zip
-#cd pigpio-master
-#make
-#sudo make install
 
 - name: "serialsw | delete dir {{ serial_base_dir}}"
   become: true
