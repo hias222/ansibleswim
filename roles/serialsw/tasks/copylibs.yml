@@ -28,7 +28,7 @@
   when:
       - ansible_facts['architecture'] == "aarch64"
 
-- name: "serialsw | copy libs {{linux_lib_name}}"
+- name: "serialsw | copy libs {{ftdi_directory}}/{{linux_lib_name}} to {{lib_destination}}"
   become: true
   copy:
     src: "{{ftdi_directory}}/{{linux_lib_name}}"
@@ -37,7 +37,7 @@
     group: root
     mode: '0755'
 
-- name: "serialsw | copy libs {{linux_lib_a_name}}"
+- name: "serialsw | copy libs {{ftdi_directory}}/{{linux_lib_a_name}} to {{lib_destination}}"
   become: true
   copy:
     src: "{{ftdi_directory}}/{{linux_lib_a_name}}"
@@ -46,7 +46,7 @@
     group: root
     mode: '0755'
 
-- name: "serialsw | copy libs {{linux_lib_txt_name}}"
+- name: "serialsw | copy libs {{ftdi_directory}}/{{linux_lib_txt_name}} to {{lib_destination}}"
   become: true
   copy:
     src: "{{ftdi_directory}}/{{linux_lib_txt_name}}"
@@ -55,7 +55,7 @@
     group: root
     mode: '0755'
 
-- name: serialsw | link linux64
+- name: "serialsw | link linux64 {{lib_destination}}/libftd2xx.so {{lib_destination}}/{{linux_lib_name}}"
   become: true
   file:
     dest: "{{lib_destination}}/libftd2xx.so"
