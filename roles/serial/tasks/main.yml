@@ -6,16 +6,6 @@
     pogio_master_file: pigpio-master.zip
     pigpio_base_dir: /opt/colorado/pigpio
 
-- name: Show facts available on the system
-  ansible.builtin.debug:
-    var: ansible_facts
-
-- name: Shut down CentOS 6 systems
-  ansible.builtin.command: /sbin/shutdown -t now
-  when:
-      - ansible_facts['distribution'] == "CentOS"
-      - ansible_facts['distribution_major_version'] == "6"
-
 # comdline.txt -relaxed
 # net.ifnames=0 dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=LABEL=writable rootfstype=ext4  elevator=deadline rootwait fixrtc iomem=relaxed
 #wget https://github.com/joan2937/pigpio/archive/master.zip
@@ -24,35 +14,6 @@
 #make
 #sudo make install
 
-- name: "serial | create dir {{ serial_build_dir}}"
-  become: true
-  file:
-    path: "{{ serial_base_dir}}"
-    state: absent
-
-- name: "serial | create dir {{ serial_base_dir}}"
-  become: true
-  file:
-    path: "{{ serial_base_dir}}"
-    owner: ubuntu
-    group: ubuntu
-    state: directory
-    mode: '0755'
-
-- name: "serial | create dir {{ serial_build_dir}}"
-  become: true
-  file:
-    path: "{{ serial_build_dir}}"
-    state: absent
-
-- name: "serial | create dir {{ serial_build_dir}}"
-  become: true
-  file:
-    path: "{{ serial_build_dir}}"
-    owner: ubuntu
-    group: ubuntu
-    state: directory
-    mode: '0755'
 
 - name: "serial | create dir {{ pigpio_base_dir}}"
   become: true
@@ -62,12 +23,14 @@
     group: root
     state: directory
     mode: '0755'
+  when: install_gpio_libs|bool
 
 - name: serial | copy pigpio
   become: true 
   unarchive:
     src: "{{ pogio_master_file }}"
     dest: "{{pigpio_base_dir}}"
+  when: install_gpio_libs|bool
 
 - name: "serial | install pigpio"
   become: true
@@ -75,11 +38,7 @@
     cd {{pigpio_base_dir}}/pigpio-master
     make
     make install
-
-- name: serial | git checkout
-  git:
-    repo: https://github.com/hias222/serial.git
-    dest: "{{ serial_base_dir}}"
+  when: install_gpio_libs|bool
 
 - name: colorado | disable service serial
   become: true
@@ -102,11 +61,9 @@
     post_reboot_delay: 30
     test_command: whoami
 
-- name: "serial | build serial"
-  shell: | 
-    cd {{serial_build_dir}}
-    cmake {{serial_base_dir}}
-    cmake --build {{serial_build_dir}}
+- name: "colorado | serialsw"
+  import_role: 
+    name: serialsw
 
 - name: "serial | install colorado"
   become: true
@@ -133,7 +90,5 @@
   service:
     name: colorado
     state: started
-
-
 
 # install -v -m 744 files/colorado.service "${ROOTFS_DIR}/etc/systemd/system"

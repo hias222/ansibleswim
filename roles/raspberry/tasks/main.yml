@@ -8,6 +8,7 @@
 
 - name: "common add changeRPIstart"
   include_tasks: changeRPIstart.yml
+  when: install_gpio_libs|bool
 
 - name: "common | apt update "
   become: true
