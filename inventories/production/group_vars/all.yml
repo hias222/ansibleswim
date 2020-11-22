@@ -1,6 +1,7 @@
 # npm and cassandra bins install with global true
 global_clean_all: true
 install_gpio_libs: false
+use_ftdi_serial: true
 install_user_os: ubuntu
 nginx_display_dir: /usr/share/nginx/html/display
 nginx_frontend_dir: /usr/share/nginx/html/frontend

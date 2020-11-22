@@ -6,6 +6,12 @@
     pogio_master_file: pigpio-master.zip
     pigpio_base_dir: /opt/colorado/pigpio
 
+- name: serial | set vars
+  set_fact:
+    key_value: serial_data
+    serial_executable_dir: "{{serial_base_dir}}/binaries/aarch64"
+
+
 # comdline.txt -relaxed
 # net.ifnames=0 dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=LABEL=writable rootfstype=ext4  elevator=deadline rootwait fixrtc iomem=relaxed
 #wget https://github.com/joan2937/pigpio/archive/master.zip
@@ -68,7 +74,7 @@
 - name: "serial | install colorado"
   become: true
   shell: | 
-    cp {{serial_build_dir}}/serial /usr/bin/colorado
+    cp {{serial_executable_dir}}/serial /usr/bin/colorado
 
 - name: "serial | install service "
   become: true
@@ -78,6 +84,17 @@
     owner: root
     group: root
     mode: '0644'
+  when: not use_ftdi_serial|bool
+
+- name: "serial | install service for ftdi "
+  become: true
+  template:
+    src: colorado_ftdi.service
+    dest: /lib/systemd/system/colorado.service
+    owner: root
+    group: root
+    mode: '0644'
+  when: use_ftdi_serial|bool
 
 - name: serial | Enable service colorado
   become: true
