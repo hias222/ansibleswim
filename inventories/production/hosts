@@ -1,6 +1,6 @@
 192.168.178.174 ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='/Users/matthiasfuchs/projects/schwimmen/ansibleswim/keys/rpi'
 192.168.56.103 ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='/Users/matthiasfuchs/projects/schwimmen/ansibleswim/keys/rpi'
-192.168.178.152 ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='/Users/matthiasfuchs/projects/schwimmen/ansibleswim/keys/rpi'
+192.168.178.152 ansible_ssh_port=22 ansible_ssh_user='pi' ansible_ssh_private_key_file='/Users/matthiasfuchs/projects/schwimmen/ansibleswim/keys/rpi'
 
 [rpi]
 192.168.178.174
@@ -13,3 +13,7 @@
 
 [client:vars]
 global_clean_all=true
+
+[webcam]
+192.168.178.152
+
