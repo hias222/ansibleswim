@@ -1,3 +1,0 @@
-- import_playbook: raspberry.yml
-- import_playbook: serial.yml
-- import_playbook: serial-sender.yml

@@ -49,7 +49,7 @@
 - name: "frontend | Install {{ frontend_base_dir}} packages"
   npm:
     path: "{{ frontend_base_dir}}"
-    global: no
+    global: "{{ npm_gloabal_install }}"
     state: latest
 
 - name: "frontend | env | copy environment"

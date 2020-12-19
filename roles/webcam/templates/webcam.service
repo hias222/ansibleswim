@@ -3,7 +3,7 @@ Description=webcam
 After=network.target
 
 [Service] 
-ExecStart=/usr/local/bin/v4l2rtspserver -W 640 -H 480 -F 15 -P {{webcam_port}} /dev/{{webcam_dev}} -u {{webcam_url}}
+ExecStart=/usr/local/bin/v4l2rtspserver -W 1280 -H 720 -F 15 -P {{webcam_port}} /dev/{{webcam_dev}} -u {{webcam_url}}
 WorkingDirectory={{webcam_base_dir}}
 StandardOutput=syslog
 StandardError=syslog

@@ -5,18 +5,21 @@
 - name: "common | set args"
   set_fact:
     key_value: npm
+    arm_architecture: true
     clean_install: "{{global_clean_all}}"
-    npm_download_file: node-v12.18.3-linux-arm64
+    npm_download_file: node-v14.15.3-linux-arm64
 
 - name: "common | set args for x86_64"
   set_fact: 
     key_value: npm
+    arm_architecture: false
     npm_download_file: node-v12.18.3-linux-x64
   when: ansible_architecture=='x86_64'
 
 - name: "common | set args for armv7l"
   set_fact: 
     key_value: npm
+    arm_architecture: false
     npm_download_file: node-v12.18.3-linux-armv7l
   when: ansible_architecture=='armv7l'
 
@@ -24,6 +27,46 @@
   become: true
   apt:
     update_cache: yes
+
+- name: "common | remove snap"
+  become: true
+  shell: | 
+    snap remove lxd
+    snap remove core18
+    snap remove snapd
+  when: 
+    - arm_architecture|bool 
+    - clean_install|bool
+  ignore_errors: true
+
+- name: "common | reboot"
+  become: true
+  reboot:
+    msg: "Reboot initiated by Ansible"
+    connect_timeout: 5
+    reboot_timeout: 600
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+    test_command: whoami
+  when: 
+    - arm_architecture|bool 
+    - clean_install|bool
+
+- name: "common | install node-sass"
+  npm:
+    name: node-sass
+    state: latest
+    global: true
+  when: 
+    - arm_architecture|bool 
+    - clean_install|bool
+  ignore_errors: true
+
+- name: "common | compile sass"
+  command: npm rebuild node-sass
+  when: 
+    - arm_architecture|bool 
+    - clean_install|bool
 
 - name: "common | install packages "
   become: true
@@ -99,12 +142,18 @@
     name: pm2
     global: yes
 
+- name: "common | npm node-sass global"
+  npm:
+    name: node-sass
+    global: yes
+
 - name: "common | delete pm2 folder /home/{{ install_user_os }}/.pm2"
   become: true
   file:
     path: "/home/{{ install_user_os }}/.pm2"
     state: absent
   when: clean_install|bool
+  ignore_errors: true
 
 - name: "common | npm | reset ssh connection"
   meta: reset_connection
@@ -129,7 +178,7 @@
     msg: "{{output.stdout}}"
   when: clean_install|bool
 
-- name: "colorado | disable service pm2-{{ install_user_os }}"
+- name: "common | disable service pm2-{{ install_user_os }}"
   become: true
   service:
     name: "pm2-{{ install_user_os }}"

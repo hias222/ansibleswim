@@ -15,6 +15,7 @@
 
 - name: "displayweb | pm2 stop all"
   command: pm2 stop all
+  ignore_errors: true
 
 - name: "displaywen | debug"
   debug:
@@ -56,21 +57,21 @@
     dest: "{{ displayweb_base_dir}}"
     force: yes
 
-- name: "displayweb | install node-sass"
-  npm:
-    name: node-sass
-    state: latest
-    path: "{{ displayweb_base_dir}}"
-  ignore_errors: true
+#- name: "displayweb | install node-sass"
+#  npm:
+#    name: node-sass
+#    state: latest
+#    path: "{{ displayweb_base_dir}}"
+#  ignore_errors: true
 
-- name: "displayweb | compile sass"
-  command: npm rebuild node-sass
-  when: arm_architecture|bool
+#- name: "displayweb | compile sass"
+#  command: npm rebuild node-sass
+#  when: arm_architecture|bool
 
 - name: "displayweb | Install {{ displayweb_base_dir}} packages"
   npm:
     path: "{{ displayweb_base_dir}}"
-    global: no
+    global: "{{ npm_gloabal_install }}"
     state: latest
 
 - name: "datamapping | env | copy environment"

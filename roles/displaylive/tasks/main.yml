@@ -1,0 +1,87 @@
+- name: "displaylive | set vars | global_clean_all {{global_clean_all}}"
+  set_fact:
+    key_value: serial_data
+    clean_install: "{{global_clean_all}}"
+    displaylive_base_dir: /opt/displaylive/base
+    arm_architecture: true
+    nginx_live_dir: /etc/nginx/sites-available/live
+    displaylive_repo: https://github.com/hias222/displaylive.git
+
+- name: "common | set args for x86_64"
+  set_fact:
+    key_value: serial_data
+    arm_architecture: false
+  when: ansible_architecture=='x86_64'
+
+- name: "displaylive | debug"
+  debug:
+    msg: on ubuntu change firewall sudo ufw allow http
+
+- name: "displaylive | ufw allow http"
+  become: true
+  shell:
+    cmd: ufw allow http
+
+- name: "displaylive | remove dir {{displaylive_base_dir}}"
+  become: true
+  file:
+    path: "{{ displaylive_base_dir}}"
+    state: absent
+  when: clean_install|bool
+
+- name: "displaylive | create dir {{ displaylive_base_dir}}"
+  become: true
+  file:
+    path: "{{ displaylive_base_dir }}"
+    owner: ubuntu
+    group: ubuntu
+    state: directory
+    mode: "0755"
+
+- name: "displaylive | create dir {{ nginx_live_dir}}"
+  become: true
+  file:
+    path: "{{ nginx_live_dir}}"
+    owner: ubuntu
+    group: ubuntu
+    state: directory
+    mode: "0755"
+
+- name: "displaylive | git checkout {{displaylive_repo}}"
+  git:
+    repo: "{{displaylive_repo}}"
+    dest: "{{ displaylive_base_dir}}"
+    force: yes
+
+#- name: "displaylive | install node-sass"
+#  npm:
+#    name: node-sass
+#    state: latest
+#    path: "{{ displaylive_base_dir}}"
+#  ignore_errors: true
+
+#- name: "displaylive | compile sass"
+#  command: npm rebuild node-sass
+#  when: arm_architecture|bool
+
+- name: "displaylive | Install {{ displaylive_base_dir}} packages"
+  npm:
+    path: "{{ displaylive_base_dir}}"
+    global: "{{ npm_gloabal_install }}"
+    state: latest
+
+- name: "displaylive | env | copy environment"
+  template:
+    src: .env
+    dest: "{{ displaylive_base_dir}}"
+
+# npm rebuild node-sass ??
+
+- name: "displaylive | build {{ displaylive_base_dir}}"
+  shell:
+    cmd: npm run build
+    chdir: "{{ displaylive_base_dir}}"
+
+- name: "displaylive | mv {{displaylive_base_dir}} to  {{nginx_live_dir}}"
+  become: true
+  shell: cp -rf {{displaylive_base_dir}}/build/* {{nginx_live_dir}}

@@ -75,7 +75,7 @@
   become: true
   service:
     name: webcam
-    enabled: yes
+    enabled: no
 
 - name: webcam | Enable service webcam
   become: true
@@ -107,7 +107,7 @@
   become: true
   service:
     name: webcam2
-    enabled: yes
+    enabled: no
 
 - name: webcam | Enable service webcam
   become: true

@@ -78,7 +78,7 @@
 - name: "datahub | Install npm {{ datahub_server_dir}} packages"
   npm:
     path: "{{ datahub_server_dir}}"
-    global: no
+    global: "{{ npm_gloabal_install }}"
     state: latest
 
 - include_tasks: data.yml

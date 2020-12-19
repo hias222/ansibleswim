@@ -1,5 +1,6 @@
 # npm and cassandra bins install with global true
-global_clean_all: false
+global_clean_all: true
+npm_gloabal_install: yes
 install_gpio_libs: false
 use_ftdi_serial: true
 install_user_os: ubuntu

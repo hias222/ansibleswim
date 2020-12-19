@@ -68,7 +68,7 @@
 - name: "displaysocket | Install {{ displaysocket_base_dir}} packages"
   npm:
     path: "{{ displaysocket_base_dir}}"
-    global: no
+    global: "{{ npm_gloabal_install }}"
     state: latest
 
 - name: "displaysocket | env | copy environment"
