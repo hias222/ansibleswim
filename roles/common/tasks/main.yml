@@ -52,7 +52,7 @@
     - arm_architecture|bool 
     - clean_install|bool
 
-- name: "common | install node-sass"
+- name: "common | install node-sass - takes more than 1 hour cc1plus - start it interactive, its faster"
   npm:
     name: node-sass
     state: latest
@@ -140,11 +140,6 @@
 - name: "common | npm pm2 global"
   npm:
     name: pm2
-    global: yes
-
-- name: "common | npm node-sass global"
-  npm:
-    name: node-sass
     global: yes
 
 - name: "common | delete pm2 folder /home/{{ install_user_os }}/.pm2"
