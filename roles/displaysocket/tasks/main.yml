@@ -50,21 +50,6 @@
     dest: "{{ displaysocket_base_dir}}"
     force: true
 
-- name: "displaysocket | npm express global"
-  npm:
-    name: express
-    global: yes
-
-- name: "displaysocket | npm mqtt global"
-  npm:
-    name: mqtt
-    global: yes
-
-- name: "displaysocket | npm jmespath global"
-  npm:
-    name: jmespath
-    global: yes
-
 - name: "displaysocket | Install {{ displaysocket_base_dir}} packages"
   npm:
     path: "{{ displaysocket_base_dir}}"

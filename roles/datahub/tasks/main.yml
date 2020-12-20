@@ -6,13 +6,20 @@
     datahub_server_dir: /opt/datahubserver
     datahub_repo: https://github.com/hias222/datahub.git
 
-- name: "displayweb | ufw allow 8080"
+- name: "datahub | ufw allow 8080"
   become: true
   shell: 
     cmd: ufw allow 8080
 
-- name: "displayweb | pm2 stop all"
+- name: "datahub | pm2 stop all"
   command: pm2 stop all
+
+- name: datahub | Stop service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: restarted
+  ignore_errors: true
 
 - name: "datahub | remove dir {{datahub_base_dir}}"
   become: true
@@ -40,7 +47,6 @@
   npm:
     path: "{{ datahub_base_dir}}"
     state: latest
-
 
 - name: "datahub | create dir {{ datahub_base_dir}}/env"
   become: true

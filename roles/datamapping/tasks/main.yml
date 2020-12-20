@@ -29,8 +29,8 @@
   become: true
   file:
     path: "{{ datamapping_base_dir}}"
-    owner: "{{ install_user_os }}"
-    group: "{{ install_user_os }}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
     state: directory
     mode: '0755'
 
@@ -45,8 +45,8 @@
   become: true
   file:
     path: "{{ datamapping_build_dir}}"
-    owner: "{{ install_user_os }}"
-    group: "{{ install_user_os }}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
     state: directory
     mode: '0755'
 
@@ -55,21 +55,6 @@
     repo: "{{datamapping_repo}}"
     dest: "{{ datamapping_base_dir}}"
     force: true
-
-- name: "datamapping | npm express global"
-  npm:
-    name: express
-    global: yes
-
-- name: "datamapping | npm mqtt global"
-  npm:
-    name: mqtt
-    global: yes
-
-- name: "datamapping | npm jmespath global"
-  npm:
-    name: jmespath
-    global: yes
 
 - name: "datamapping | Install {{ datamapping_base_dir}} packages"
   npm:

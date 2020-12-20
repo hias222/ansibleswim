@@ -1,6 +1,8 @@
 - hosts: all
   roles:
     - datamapping
-    - datahub
-    - cassandra
     - displaysocket
+    - cassandra
+    - datahub
+    
+    
