@@ -4,14 +4,24 @@
     clean_install: "{{global_clean_all}}"
     displaylive_base_dir: /opt/displaylive/base
     arm_architecture: true
-    nginx_live_dir: /etc/nginx/sites-available/live
     displaylive_repo: https://github.com/hias222/displaylive.git
 
-- name: "common | set args for x86_64"
+- name: displaylive | Stop service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: stopped
+  ignore_errors: true
+
+- name: "displaylive | set args for x86_64"
   set_fact:
     key_value: serial_data
     arm_architecture: false
   when: ansible_architecture=='x86_64'
+
+- name: "displaylive | pm2 stop all"
+  command: pm2 stop all
+  ignore_errors: true
 
 - name: "displaylive | debug"
   debug:
@@ -53,17 +63,6 @@
     dest: "{{ displaylive_base_dir}}"
     force: yes
 
-#- name: "displaylive | install node-sass"
-#  npm:
-#    name: node-sass
-#    state: latest
-#    path: "{{ displaylive_base_dir}}"
-#  ignore_errors: true
-
-#- name: "displaylive | compile sass"
-#  command: npm rebuild node-sass
-#  when: arm_architecture|bool
-
 - name: "displaylive | Install {{ displaylive_base_dir}} packages"
   npm:
     path: "{{ displaylive_base_dir}}"
@@ -82,6 +81,10 @@
     cmd: npm run build
     chdir: "{{ displaylive_base_dir}}"
 
-- name: "displaylive | mv {{displaylive_base_dir}} to  {{nginx_live_dir}}"
+- name: "displaylive | cp {{displaylive_base_dir}}/* to  {{nginx_live_dir}}"
   become: true
   shell: cp -rf {{displaylive_base_dir}}/build/* {{nginx_live_dir}}
+
+- name: "displaylive | pm2 start all"
+  command: pm2 start all
+  ignore_errors: true

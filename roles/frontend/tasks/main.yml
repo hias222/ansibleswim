@@ -6,6 +6,13 @@
     frontend_base_dir: /opt/frontend/base
     frontend_repo: https://github.com/hias222/frontend.git
 
+- name: frontend | Stop service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: stopped
+  ignore_errors: true
+
 - name: "frontend | set args for x86_64"
   set_fact: 
     key_value: serial_data
@@ -21,6 +28,7 @@
 
 - name: "frontend | pm2 stop all"
   command: pm2 stop all
+  ignore_errors: true
 
 - name: "frontend | create dir {{ frontend_base_dir}}"
   become: true
@@ -57,18 +65,22 @@
     src: .env
     dest: "{{ frontend_base_dir}}"
 
-- name: "frontend | compile sass"
-  command: npm rebuild node-sass
-  when: arm_architecture|bool
-
 - name: "frontend | build {{ frontend_base_dir}}"
   shell: 
     cmd: npm run build
     chdir: "{{ frontend_base_dir}}"
 
-- name: "frontend | mv {{frontend_base_dir}} to  {{nginx_frontend_dir}}"
+- name: "frontend | cp {{frontend_base_dir}}/* to  {{nginx_frontend_dir}}"
   become: true
   shell: cp -rf {{frontend_base_dir}}/build/* {{nginx_frontend_dir}}
 
 - name: "frontend | pm2 start all"
   command: pm2 start all
+  ignore_errors: true
+
+- name: frontend | Stop service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: restarted
+  ignore_errors: true

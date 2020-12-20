@@ -53,6 +53,13 @@
     enabled: no
   ignore_errors: true
 
+- name: "common | unstart/remove pm2"
+  become: true
+  command: "pm2 unstartup systemd"
+  register: output
+  when: clean_install|bool
+  ignore_errors: true
+
 - name: "common | reboot"
   become: true
   reboot:
@@ -163,12 +170,6 @@
     state: absent
   when: clean_install|bool
   ignore_errors: true
-
-- name: "common | unstart/remove pm2"
-  become: true
-  command: "pm2 unstartup systemd"
-  register: output
-  when: clean_install|bool
 
 - name: "common | npm | reset ssh connection"
   meta: reset_connection
