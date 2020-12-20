@@ -3,7 +3,7 @@ global_clean_all: true
 npm_gloabal_install: no
 install_gpio_libs: false
 use_ftdi_serial: true
-install_user_os: ubuntu
+# install_user_os: ubuntu -- ansible_facts.user_id
 nginx_display_dir: /usr/share/nginx/html/display
 nginx_frontend_dir: /usr/share/nginx/html/frontend
 nginx_admin_dir: /usr/share/nginx/html/admin
