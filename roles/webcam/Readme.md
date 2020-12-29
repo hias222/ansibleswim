@@ -2,7 +2,8 @@
 
 ## use v4l2rtspserver
 
-this tool generates rtsp stream out of usb or csi webcam. The latenz is around 0.5s - 1s
+* this tool generates rtsp stream out of usb or csi webcam. The latenz is around 0.5s - 1s
+* see details in tasks main.yml [role](tasks/main.yml)
 
 ## uv4l use webrtc
 
