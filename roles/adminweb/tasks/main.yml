@@ -72,14 +72,14 @@
 - name: "adminweb | mv {{adminweb_base_dir}} to  {{nginx_admin_dir}}"
   become: true
   shell: cp -rf {{adminweb_base_dir}}/build/* {{nginx_admin_dir}}
-  
-- name: "adminweb | pm2 start all"
-  command: pm2 start all
-  ignore_errors: true
 
 - name: adminweb | Restart service cassandra
   become: true
   service:
     name: cassandra
     state: restarted
+  ignore_errors: true
+
+- name: "adminweb | pm2 start all"
+  command: pm2 start all
   ignore_errors: true

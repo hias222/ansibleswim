@@ -1,14 +1,12 @@
 http://www.davidhunt.ie/raspberry-pi-high-quality-camera-setup-for-low-latency-video-conferencing/
 
-https://www.linux-projects.org/uv4l/tutorials/streaming-server/
-
-https://www.linux-projects.org/uv4l/installation/
-
 https://github.com/kclyu/rpi-webrtc-streamer
 
 https://raspberrypi.stackexchange.com/questions/39690/configuring-uv4l-for-webrtc-using-usb-camera-on-rpi2-raspbian
 
 https://www.highvoltagecode.com/post/webrtc-on-raspberry-pi-live-hd-video-and-audio-streaming
+
+https://github.com/jacksonliam/mjpg-streamer
 
 
 ############
@@ -71,6 +69,21 @@ sudo dbkg -i install libssl1.0.2_1.0.2u-1~deb9u3_armhf.deb
 sudo apt-get install uv4l uv4l-server uv4l-webrtc uv4l-demos
 
 uv4l --external-driver --device-name=video2
+
+### Janus
+
+https://snapcraft.io/install/janus-gateway/raspbian
+
+docker pull canyan/janus-gateway
+
+vi docker-compose.yml
+
+add from docker hub 
+
+start
+
+
+
 
 ## mit usb direkt
 check dmesg

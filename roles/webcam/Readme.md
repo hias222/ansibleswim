@@ -1,11 +1,25 @@
 # install webcam
 
-## use v4l2rtspserver
+<https://ourcodeworld.com/articles/read/1212/top-5-best-open-source-webrtc-media-server-projects>
+<https://github.com/versatica/mediasoup-demo>
+<https://webrtc.github.io/samples/>
+<https://www.linux-projects.org/uv4l/installation/>
+<https://github.com/jacksonliam/mjpg-streamer>
+<https://gstreamer.freedesktop.org>
+<https://www.epiphan.com/blog/best-cameras-for-live-streaming>
+
+## possible protocolls
+
+* stream with mjpeg
+* WebRTC
+* RTSP
+
+## RTSP: use v4l2rtspserver
 
 * this tool generates rtsp stream out of usb or csi webcam. The latenz is around 0.5s - 1s
 * see details in tasks main.yml [role](tasks/main.yml)
 
-## uv4l use webrtc
+## WebRTC and stream: uv4l
 
 ### uv4l prerequisites
 
@@ -13,6 +27,7 @@ It only works with rapian 32 version
 
 * Kernel version: 5.4
 * 32 bit
+* put empty file with name ssh in root boot partition for ssh access
 
 Other systems tested - not working, the issues are always different
 

@@ -12,6 +12,20 @@
     enabled: no
   ignore_errors: true
 
+- name: datahub | Stop service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: restarted
+  ignore_errors: true
+
+- name: "colorado | disable service pm2-{{ install_user_os }}"
+  become: true
+  service:
+    name: cassandra
+    enabled: no
+  ignore_errors: true
+
 - name: "colorado | reboot"
   become: true
   reboot:

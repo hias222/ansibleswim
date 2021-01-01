@@ -1,0 +1,19 @@
+- hosts: all
+  roles:
+    #- displayweb
+    - displaylive
+    #- frontend
+    #- adminweb
+    ## backend
+    #- datamapping
+    #- displaysocket
+    #- cassandra
+    #- datahub
+    ## rest
+    #- raspberry
+    #- common
+    #- serial-sender
+    #- serial
+    #- serialsw
+    ## off
+    # - serviceoff
