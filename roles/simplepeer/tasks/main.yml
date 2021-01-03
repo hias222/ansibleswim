@@ -7,7 +7,7 @@
     simplepeer_repo: https://github.com/hias222/webcam.git
 
 - name: "simplepeer | pm2 | remove simplepeer"
-  command: pm2 delete server.js --name simplepeer
+  command: pm2 delete  simplepeer
   args:
     chdir: "{{ simplepeer_base_dir}}"
   ignore_errors: true

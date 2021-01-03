@@ -17,5 +17,5 @@
     #- serialsw
     ## off
     # - serviceoff
-    # - nginx
+    - nginx
     - simplepeer
