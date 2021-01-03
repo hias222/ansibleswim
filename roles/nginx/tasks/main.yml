@@ -14,3 +14,10 @@
 - include_tasks: createCerts.yml
 
 - include_tasks: nginx.yml
+
+- name: nginx | start service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: started
+  ignore_errors: true
