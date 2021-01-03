@@ -89,6 +89,7 @@
     - jpnevulator
     - mosquitto 
     - mosquitto-clients
+    - net-tools
     - nginx-full
 
 - name: "common | install python2.7 for cassandra "

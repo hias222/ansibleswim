@@ -85,8 +85,6 @@
 - name: "displayweb | cp {{displayweb_base_dir}}/* to  {{nginx_display_dir}}"
   become: true
   shell: cp -rf {{displayweb_base_dir}}/build/* {{nginx_display_dir}}
-  
-- include_tasks: nginx.yml
 
 - name: "displayweb | pm2 start all"
   command: pm2 start all

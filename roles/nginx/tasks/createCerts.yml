@@ -1,0 +1,24 @@
+- name: "nginx | createCerts | "
+  become: true
+  shell: |
+    openssl req -x509 -nodes -days 365 -newkey rsa:4096 -subj "/C=DE/ST=Bayern/L=Fuerth/O=Dis/CN={{nginx_server_name}}" -keyout /etc/ssl/private/nginx-swim.key -out /etc/ssl/certs/nginx-swim.crt
+    sudo ufw allow 'Nginx Full'
+    sudo ufw delete allow 'Nginx HTTP'
+  when: clean_install|bool
+
+- name: "nginx | createCerts | copy ssl config to {{ nginx_config_dir}}"
+  become: true
+  template:
+    src: defaultssl
+    dest: "{{ nginx_config_dir}}"
+
+- name: "nginx | createCerts | create link "
+  become: true
+  file:
+    src: "{{ nginx_config_dir}}/defaultssl"
+    dest: /etc/nginx/sites-enabled/defaultssl
+    owner: root
+    group: root
+    state: link
+    
+# ln -s {{ nginx_config_dir}}/defaultssl /etc/nginx/sites-enabled/
