@@ -58,14 +58,14 @@
 
 - name: "simplepeer | Install {{ simplepeer_base_dir}} packages"
   npm:
-    path: "{{ simplepeer_base_dir}}"
+    path: "{{ simplepeer_base_dir}}/server"
     global: "{{ npm_gloabal_install }}"
     state: latest
 
 - name: "simplepeer | pm2 start"
   command: pm2 start server.js --name simplepeer -f
   args:
-    chdir: "{{ simplepeer_base_dir}}"
+    chdir: "{{ simplepeer_base_dir}}/server"
 
 - name: "simplepeer | pm2"
   command: pm2 save
