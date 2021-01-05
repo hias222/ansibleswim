@@ -6,6 +6,9 @@
     sudo ufw delete allow 'Nginx HTTP'
   when: clean_install|bool
 
+# openssl req -x509 -sha256 -days 365 -key server.key -out server.crt -config config.cnf
+# openssl req -x509 -nodes -days 365 -newkey rsa:4096 -out server.crt -config config.cnf
+
 - name: "nginx | createCerts | copy ssl config to {{ nginx_config_dir}}"
   become: true
   template:
