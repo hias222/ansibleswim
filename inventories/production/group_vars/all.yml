@@ -1,5 +1,5 @@
 # npm and cassandra bins install with global true
-global_clean_all: false
+global_clean_all: true
 npm_gloabal_install: no
 install_gpio_libs: false
 use_ftdi_serial: true
@@ -13,3 +13,4 @@ nginx_html_dir: /usr/share/nginx/html
 nginx_peer_dir: /usr/share/nginx/html/peer
 cassandra_base_dir: /opt/cassandra
 cassandra_file: apache-cassandra-3.11.7
+nginx_domain_name: ubuntu

@@ -5,9 +5,9 @@ req_extensions      = san
 extensions          = san
 prompt              = no
 [ dn ]
-countryName         = US
-stateOrProvinceName = Massachusetts
-localityName        = Boston
-organizationName    = MyCompany
+countryName         = DE
+stateOrProvinceName = Bayern
+localityName        = Fuerth
+organizationName    = swim
 [ san ]
-subjectAltName      = DNS:dev.mycompany.com
+subjectAltName      = DNS:{{ nginx_domain_name}}

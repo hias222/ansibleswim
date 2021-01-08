@@ -1,5 +1,5 @@
-ssl_certificate /etc/ssl/certs/nginx-swim.crt;
-ssl_certificate_key /etc/ssl/private/nginx-swim.key;
+ssl_certificate /etc/ssl/certs/{{ nginx_domain_name}}.crt;
+ssl_certificate_key /etc/ssl/private/{{ nginx_domain_name}}.key;
 
 server {
     listen 443 ssl;

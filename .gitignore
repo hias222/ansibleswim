@@ -4,3 +4,5 @@ keys/*
 keys
 production.env
 .env
+*.key
+password.txt
