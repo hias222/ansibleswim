@@ -1,4 +1,4 @@
-- name: "nginx | nginx | copy environment"
+- name: "nginx | nginx | copy default environment"
   become: true
   template:
     src: default

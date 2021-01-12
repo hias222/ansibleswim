@@ -44,6 +44,11 @@
     dest: "{{ simplepeerclient_base_dir}}"
     force: yes
 
+- name: "simplepeerclient | env | copy environment {{ simplepeerclient_base_dir}}/client/.env"
+  template:
+    src: env
+    dest: "{{ simplepeerclient_base_dir}}/client/.env"
+
 - name: "simplepeerclient | Install {{ simplepeerclient_base_dir}} packages"
   npm:
     path: "{{ simplepeerclient_base_dir}}/client"

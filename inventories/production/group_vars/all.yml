@@ -1,5 +1,5 @@
 # npm and cassandra bins install with global true
-global_clean_all: true
+global_clean_all: false
 npm_gloabal_install: no
 install_gpio_libs: false
 use_ftdi_serial: true
