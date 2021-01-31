@@ -1,14 +1,14 @@
 - hosts: all
   roles:
     #- displayweb
-    #- displaylive
-    #- frontend
+    - displaylive
+    # - frontend
     #- adminweb
     ## backend
-    #- datamapping
-    - displaysocket
+    # - datamapping
+    # - displaysocket
     #- cassandra
-    #- datahub
+    # - datahub
     ## rest
     #- raspberry
     #  common
@@ -19,3 +19,7 @@
     # - serviceoff
     # - nginx
     # - simplepeer
+
+
+# for cloud addons -
+# ansible-playbook -i inventories/production/hosts testService.yml --limit=rpi -e mapper_cloud=true

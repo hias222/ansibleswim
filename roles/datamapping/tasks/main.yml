@@ -5,9 +5,22 @@
     datamapping_base_dir: /opt/datamapping/base
     datamapping_build_dir: /opt/datamapping/build
     datamapping_repo: https://github.com/hias222/datamapping.git
+    datamapping_name: backend
+    datamapping_env: local
+
+- name: "datamapping | set vars | global_clean_all {{global_clean_all}}"
+  set_fact:
+    key_value: serial_data
+    clean_install: "{{global_clean_all}}"
+    datamapping_base_dir: /opt/cloudmapping/base
+    datamapping_build_dir: /opt/cloudapping/build
+    datamapping_repo: https://github.com/hias222/datamapping.git
+    datamapping_name: cloud
+    datamapping_env: cloud
+  when: mapper_cloud|bool
 
 - name: "datamapping | pm2"
-  command: pm2 delete app.js --name backend
+  command: pm2 delete app.js --name "{{ datamapping_name }}"
   args:
     chdir: "{{ datamapping_base_dir}}"
   ignore_errors: true
@@ -64,11 +77,11 @@
 
 - name: "datamapping | env | copy environment"
   template:
-    src: .env
-    dest: "{{ datamapping_base_dir}}"
+    src: "{{ datamapping_env }}"
+    dest: "{{ datamapping_base_dir}}/.env"
 
 - name: "datamapping | pm2 start"
-  command: pm2 start app.js --name backend -f
+  command: pm2 start app.js --name "{{ datamapping_name }}" -f
   args:
     chdir: "{{ datamapping_base_dir}}"
 
