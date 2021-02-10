@@ -88,3 +88,7 @@
 - name: "displaylive | pm2 start all"
   command: pm2 start all
   ignore_errors: true
+
+- name: "displaylive | pm2 save"
+  command: pm2 save
+  ignore_errors: true
