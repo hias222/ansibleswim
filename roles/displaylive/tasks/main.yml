@@ -92,3 +92,10 @@
 - name: "displaylive | pm2 save"
   command: pm2 save
   ignore_errors: true
+
+- name: displaylive | cassandra | start service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: started
+  ignore_errors: true
