@@ -72,6 +72,11 @@ server {
    		try_files $uri $uri/ /live/index.html;
 	}
 
+    location ^~ /overlay {
+   		try_files $uri $uri/ /overlay/index.html;
+	}
+
+
 	location ^~ /peer {
    		try_files $uri $uri/ /peer/index.html;
 	}

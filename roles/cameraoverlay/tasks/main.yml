@@ -1,0 +1,101 @@
+- name: "cameraoverlay | set vars | global_clean_all {{global_clean_all}}"
+  set_fact:
+    key_value: serial_data
+    clean_install: "{{global_clean_all}}"
+    cameroverlay_base_dir: /opt/cameraoverlay/base
+    arm_architecture: true
+    cameroverlay_repo: https://github.com/hias222/cameraoverlay.git
+
+- name: cameraoverlay | Stop service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: stopped
+  ignore_errors: true
+
+- name: "cameraoverlay | set args for x86_64"
+  set_fact:
+    key_value: serial_data
+    arm_architecture: false
+  when: ansible_architecture=='x86_64'
+
+- name: "cameraoverlay | pm2 stop all"
+  command: pm2 stop all
+  ignore_errors: true
+
+- name: "cameraoverlay | debug"
+  debug:
+    msg: on ubuntu change firewall sudo ufw allow http
+
+- name: "cameraoverlay | ufw allow http"
+  become: true
+  shell:
+    cmd: ufw allow http
+
+- name: "cameraoverlay | remove dir {{cameroverlay_base_dir}}"
+  become: true
+  file:
+    path: "{{ cameroverlay_base_dir}}"
+    state: absent
+  when: clean_install|bool
+
+- name: "cameraoverlay | create dir {{ cameroverlay_base_dir}}"
+  become: true
+  file:
+    path: "{{ cameroverlay_base_dir }}"
+    owner: ubuntu
+    group: ubuntu
+    state: directory
+    mode: "0755"
+
+- name: "cameraoverlay | create dir {{ nginx_live_dir}}"
+  become: true
+  file:
+    path: "{{ nginx_overlay_dir}}"
+    owner: ubuntu
+    group: ubuntu
+    state: directory
+    mode: "0755"
+
+- name: "cameraoverlay | git checkout {{cameroverlay_repo}}"
+  git:
+    repo: "{{cameroverlay_repo}}"
+    dest: "{{ cameroverlay_base_dir}}"
+    force: yes
+
+- name: "cameraoverlay | Install {{ cameroverlay_base_dir}} packages"
+  npm:
+    path: "{{ cameroverlay_base_dir}}"
+    global: "{{ npm_gloabal_install }}"
+    state: latest
+
+- name: "cameraoverlay | env | copy environment"
+  template:
+    src: .env
+    dest: "{{ cameroverlay_base_dir}}"
+
+# npm rebuild node-sass ??
+
+- name: "cameraoverlay | build {{ cameroverlay_base_dir}}"
+  shell:
+    cmd: npm run build
+    chdir: "{{ cameroverlay_base_dir}}"
+
+- name: "cameraoverlay | cp {{cameroverlay_base_dir}}/* to  {{nginx_live_dir}}"
+  become: true
+  shell: cp -rf {{cameroverlay_base_dir}}/build/* {{nginx_live_dir}}
+
+- name: "cameraoverlay | pm2 start all"
+  command: pm2 start all
+  ignore_errors: true
+
+- name: "cameraoverlay | pm2 save"
+  command: pm2 save
+  ignore_errors: true
+
+- name: cameraoverlay | cassandra | start service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: started
+  ignore_errors: true

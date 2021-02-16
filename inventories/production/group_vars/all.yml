@@ -11,6 +11,7 @@ nginx_frontend_dir: /usr/share/nginx/html/frontend
 nginx_admin_dir: /usr/share/nginx/html/admin
 nginx_html_dir: /usr/share/nginx/html
 nginx_peer_dir: /usr/share/nginx/html/peer
+nginx_overlay_dir: /usr/share/nginx/html/overlay
 cassandra_base_dir: /opt/cassandra
 cassandra_file: apache-cassandra-3.11.7
 nginx_domain_name: ubuntu

@@ -1,7 +1,8 @@
 - hosts: all
   roles:
     #- displayweb
-    - displaylive
+    #- displaylive
+    - cameroverlay
     # - frontend
     #- adminweb
     ## backend
@@ -17,7 +18,7 @@
     #- serialsw
     ## off
     # - serviceoff
-    # - nginx
+    - nginx
     # - simplepeer
 
 
