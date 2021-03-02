@@ -16,6 +16,10 @@ server {
 		try_files $uri /index.html =404;
 	}
 
+    location /obscontrol/ {
+    	proxy_pass http://localhost:3070/obscontrol/;
+	}
+
 	location /datahub/ {
     	proxy_pass http://localhost:8080/datahub/;
 	}

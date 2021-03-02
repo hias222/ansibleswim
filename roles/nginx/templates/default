@@ -37,6 +37,11 @@ server {
     	proxy_pass http://localhost:8080/datahub/;
 	}
 
+	location /obscontrol/ {
+    	proxy_pass http://localhost:3070/obscontrol/;
+	}
+
+
 	location /ws/ {
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
       proxy_set_header Host $host;
