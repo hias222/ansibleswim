@@ -72,6 +72,11 @@
     cmd: "cp package.json {{ obscontrol_server_dir}}"
     chdir: "{{ obscontrol_base_dir}}"
 
+- name: "obscontrol | copy swagger.yaml {{ obscontrol_server_dir}}"
+  shell: 
+    cmd: "cp swagger.yaml {{ obscontrol_server_dir}}"
+    chdir: "{{ obscontrol_base_dir}}"
+
 - name: "obscontrol | env | copy environment"
   template:
     src: production.env
