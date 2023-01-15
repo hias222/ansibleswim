@@ -1,0 +1,112 @@
+http://www.davidhunt.ie/raspberry-pi-high-quality-camera-setup-for-low-latency-video-conferencing/
+
+https://github.com/kclyu/rpi-webrtc-streamer
+
+https://raspberrypi.stackexchange.com/questions/39690/configuring-uv4l-for-webrtc-using-usb-camera-on-rpi2-raspbian
+
+https://www.highvoltagecode.com/post/webrtc-on-raspberry-pi-live-hd-video-and-audio-streaming
+
+https://github.com/jacksonliam/mjpg-streamer
+
+
+############
+## 32 bit
+
+###  
+# buster
+# signatur
+curl https://www.linux-projects.org/listing/uv4l_repo/lpkey.asc | sudo apt-key add -
+
+#add to /etc/apt/sources.list
+#deb https://www.linux-projects.org/listing/uv4l_repo/raspbian/stretch stretch main
+
+sudo bash -c 'echo "deb http://www.linux-projects.org/listing/uv4l_repo/raspbian/stretch stretch main" >> /etc/apt/sources.list'
+
+# And finally:
+
+sudo apt-get update && sudo apt-get upgrade
+
+# Now we can install UV4L streaming server with the WebRTC extension.
+# If you have Raspberry Pi 2,3 or 4:
+
+sudo apt-get install uv4l-webrtc
+
+# When that's done, launch the server:
+
+uv4l --external-driver --device-name=video2
+
+uv4l --external-driver --device-name=video2 --encoding mjpeg --server-option '--port=9000' --server-option '--admin-password=test123'
+
+# http://yourraspberrypiip:8080/stream/webrtc on
+
+http://192.168.178.152:8080/stream/webrtc
+
+
+## cam
+
+$ sudo apt-get install uv4l uv4l-raspicam
+
+## service install 
+
+sudo apt-get install uv4l-raspicam-extras
+-- uv4l_raspicam.service
+
+sudo apt-get install uv4l-server uv4l-uvc uv4l-xscreen uv4l-mjpegstream 
+
+
+###
+## 32 bit
+###
+
+curl https://www.linux-projects.org/listing/uv4l_repo/lpkey.asc | sudo apt-key add -
+sudo bash -c 'echo "deb http://www.linux-projects.org/listing/uv4l_repo/raspbian/stretch stretch main" >> /etc/apt/sources.list'
+sudo apt-get update && sudo apt-get upgrade
+
+libssl
+https://packages.debian.org/stretch/libssl1.0.2
+sudo dbkg -i install libssl1.0.2_1.0.2u-1~deb9u3_armhf.deb
+
+sudo apt-get install uv4l uv4l-server uv4l-webrtc uv4l-demos
+
+uv4l --external-driver --device-name=video2
+
+### Janus
+
+https://snapcraft.io/install/janus-gateway/raspbian
+
+docker pull canyan/janus-gateway
+
+vi docker-compose.yml
+
+add from docker hub 
+
+start
+
+
+
+
+## mit usb direkt
+check dmesg
+
+uv4l --syslog-host localhost --driver uvc --device-id 2aad:6353
+<notice> [core] Trying to loading driver 'uvc' from built-in drivers...
+<notice> [core] Loading driver 'uvc' from external plug-in's...
+<warning> [driver] Video format 
+not supported for videostreaming interface 
+<notice> [driver] Video functionality '' recognized at 2aad:6353
+<notice> [core] Device detected!
+<notice> [core] Registering device node /dev/uv4l
+
+uv4l --config-file=/etc/uv4l/uv4l-uvc.conf
+
+### 
+## 64 bit
+### only ubuntu 16 and 18 !!!!!!!!!!!
+
+### load repo
+curl https://www.linux-projects.org/listing/uv4l_repo/lpkey.asc | sudo apt-key add -
+sudo bash -c 'echo "deb [arch=amd64] https://www.linux-projects.org/listing/uv4l_repo/xenial xenial main" >> /etc/apt/sources.list'
+sudo apt-get update && sudo apt-get upgrade
+
+## uv4l
+sudo apt-get install uv4l uv4l-uvc uv4l-mjpegstream uv4l-dummy uv4l-xscreen uv4l-server uv4l-webrtc uv4l-x11-renderer uv4l-demos

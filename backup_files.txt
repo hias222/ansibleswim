@@ -1,0 +1,25 @@
+tar -cvf /Volumes/data/matthias/keys.tar $(find . -name 'inventories' | grep -v node_modules)
+tar -rvf /Volumes/data/matthias/keys.tar $(find . -name 'password.txt' | grep -v node_modules)
+tar -rvf /Volumes/data/matthias/keys.tar $(find . -name 'keys' | grep -v node_modules)
+tar -rvf /Volumes/data/matthias/keys.tar $(find . -name 'aws.env' | grep -v node_modules)
+tar -rvf /Volumes/data/matthias/keys.tar $(find . -name '*.key' | grep -v node_modules)
+tar -rvf /Volumes/data/matthias/keys.tar $(find . -name '*.pem' | grep -v node_modules)
+
+echo ""
+echo "envs ..."
+
+tar -cvf /Volumes/data/matthias/env.tar $(find . -name '*.env' | grep -v node_modules)
+tar -rvf /Volumes/data/matthias/env.tar $(find . -name '*.env.*' | grep -v node_modules)
+
+exit 0
+
+
+find . -name 'password.txt' -print0 | tar -cvf /Volumes/data/matthias/keys.tar --null --files-from -
+find . -name 'keys' -iname 'node_modules' -print0 | tar -rvf /Volumes/data/matthias/keys.tar --null --files-from -
+find . -name 'aws.env' -print0 | tar -rvf /Volumes/data/matthias/keys.tar --null --files-from -
+find . -name '*.key' -iname 'node_modules' -print0 | tar -rvf /Volumes/data/matthias/keys.tar --null --files-from -
+find . -name '*.pem' -iname 'node_modules' -print0 | tar -rvf /Volumes/data/matthias/keys.tar --null --files-from -
+find . -name 'inventory' -iname 'node_modules' -print0 | tar -rvf /Volumes/data/matthias/keys.tar --null --files-from -
+
+find . -name '*.env' -print0 | tar -cvf /Volumes/data/matthias/env.tar --null --files-from -
+find . -name '*.env.*' -iname 'node_modules' -print0 | tar -rvf /Volumes/data/matthias/env.tar --null --files-from -

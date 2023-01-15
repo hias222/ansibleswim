@@ -1,0 +1,74 @@
+
+- name: "resultdata | {{resultdata_name}} | pm2"
+  command: pm2 delete app.js --name "{{ resultdata_name }}"
+  args:
+    chdir: "{{ resultdata_base_dir}}"
+  ignore_errors: true
+
+- name: "resultdata | {{resultdata_name}} | pm2"
+  command: pm2 save
+  args:
+    chdir: "{{ resultdata_base_dir}}"
+  ignore_errors: true
+
+- name: "resultdata | {{resultdata_name}} | create dir {{ resultdata_base_dir}}"
+  become: true
+  file:
+    path: "{{ resultdata_base_dir}}"
+    state: absent
+  when: clean_install|bool
+
+- name: "resultdata | {{resultdata_name}} | create dir {{ resultdata_base_dir}}"
+  become: true
+  file:
+    path: "{{ resultdata_base_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "resultdata | {{resultdata_name}} | create dir {{ resultdata_build_dir}}"
+  become: true
+  file:
+    path: "{{ resultdata_build_dir}}"
+    state: absent
+  when: clean_install|bool
+
+- name: "resultdata | {{resultdata_name}} | create dir {{ resultdata_build_dir}}"
+  become: true
+  file:
+    path: "{{ resultdata_build_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "resultdata | {{resultdata_name}} | git checkout {{resultdata_repo}}"
+  git:
+    repo: "{{resultdata_repo}}"
+    dest: "{{ resultdata_base_dir}}"
+    force: true
+
+- name: "resultdata | {{resultdata_name}} | Install {{ resultdata_base_dir}} packages"
+  npm:
+    path: "{{ resultdata_base_dir}}"
+    global: no
+    state: latest
+
+- name: "resultdata | {{resultdata_name}} | env | copy environment"
+  template:
+    src: "{{ resultdata_env }}"
+    dest: "{{ resultdata_base_dir}}/.env"
+
+- name: "resultdata | {{resultdata_name}} | pm2 start"
+  command: pm2 start app.js --name "{{ resultdata_name }}" -f
+  args:
+    chdir: "{{ resultdata_base_dir}}"
+
+- name: "resultdata | {{resultdata_name}} | pm2"
+  command: pm2 save
+  args:
+    chdir: "{{ resultdata_base_dir}}"
+
+
+# install -v -m 744 files/colorado.service "${ROOTFS_DIR}/etc/systemd/system"

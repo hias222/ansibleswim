@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo search for PI
+
+# to simulato non pgio port
+exit  0

@@ -1,0 +1,15 @@
+[Unit]
+Description=colorado
+After=network.target
+
+[Service] 
+ExecStart=/usr/bin/colorado -x -s /dev/ttyUSB0 -d /dev/ttyUSB1
+WorkingDirectory=/opt/colorado
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=colorado
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target

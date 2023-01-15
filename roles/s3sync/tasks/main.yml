@@ -1,0 +1,182 @@
+- name: "s3sync | set vars | global_clean_all {{global_clean_all}}"
+  set_fact:
+    key_value: serial_data
+    clean_install: "{{global_clean_all}}"
+    s3sync_base_dir: /opt/s3sync/base
+    s3sync_build_dir: /opt/s3sync/build
+    s3sync_repo: https://github.com/hias222/s3sync.git
+    s3sync_name: backend
+    s3sync_env: rclone.conf
+    s2sync_bin: "https://github.com/rclone/rclone/releases/download/v1.58.1/rclone-v1.58.1-linux-arm64.zip"
+    #s2sync_bin: "https://downloads.rclone.org/v1.57.0/rclone-v1.57.0-linux-arm64.zip"
+    resultdata_base_dir: /opt/resultdata/base
+    resultdata_name: resultdata
+    resultdata_env: local
+
+
+- name: "s3sync | create dir {{ s3sync_base_dir}}"
+  become: true
+  file:
+    path: "{{ s3sync_base_dir}}"
+    state: absent
+  when: clean_install|bool
+
+- name: "s3sync | check web name"
+  debug:
+    msg: "webname is {{ nginx_domain_name }} "
+
+- name: "s3sync | create dir {{ s3sync_base_dir}}"
+  become: true
+  file:
+    path: "{{ s3sync_base_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+# s3sync_shared_folder
+
+- name: "s3sync | create dir {{ s3sync_shared_folder}}"
+  become: true
+  file:
+    path: "{{ s3sync_shared_folder}}"
+    state: absent
+  when: clean_install|bool
+
+- name: "s3sync | create dir {{ s3sync_shared_folder}}"
+  become: true
+  file:
+    path: "{{ s3sync_shared_folder}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0777'
+
+- name: "s3sync | create dir {{ s3sync_build_dir}}"
+  become: true
+  file:
+    path: "{{ s3sync_build_dir}}"
+    state: absent
+  when: clean_install|bool
+
+- name: "s3sync | create dir {{ s3sync_build_dir}}"
+  become: true
+  file:
+    path: "{{ s3sync_build_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "data | create dir {{ data_shared_folder }}"
+  become: true
+  file:
+    path: "{{ data_shared_folder }}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "data | create dir {{ dropbox_shared_folder }}"
+  become: true
+  file:
+    path: "{{ dropbox_shared_folder }}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+
+- name: "s3sync | env | copy environment"
+  template:
+    src: "{{ s3sync_env }}"
+    dest: "{{ s3sync_base_dir}}/rclone.conf"
+
+- name: "s3sync | link"
+  ansible.builtin.shell: | 
+    rm -rf /opt/s3sync/base/rclone-*-linux-arm64
+
+- name: "s3sync | Unarchive {{ s2sync_bin }} "
+  ansible.builtin.unarchive:
+    src: "{{ s2sync_bin }}"
+    dest: "{{ s3sync_base_dir}}"
+    remote_src: yes
+
+- name: "s3sync | link"
+  ansible.builtin.shell: | 
+    rm /opt/s3sync/base/latest
+    ln -s /opt/s3sync/base/rclone-*-linux-arm64/ /opt/s3sync/base/latest
+
+- name: "s3sync | samba "
+  become: true
+  apt:
+    pkg:
+    - samba
+    - samba-common-bin
+
+- name: "s3sync | samba | copy environment"
+  become: true
+  template:
+    src: "smb.conf"
+    dest: "/etc/samba/smb.conf"
+
+- name: s3sync | Stop service samba
+  become: true
+  service:
+    name: smbd
+    state: stopped
+  ignore_errors: true
+
+- name: s3sync | Start service samba
+  become: true
+  service:
+    name: smbd
+    state: started
+
+- name: "s3sync | password samba for mount_smbfs //{{ ansible_facts.user_id }}:{{ ansible_facts.user_id }}@ubuntu/colorado  coloradoshare"
+  become: true
+  ansible.builtin.shell: 
+    "printf '{{ ansible_facts.user_id }}\n{{ ansible_facts.user_id }}\n' | smbpasswd -s -a {{ ansible_facts.user_id }}"
+
+- name: "s3sync | sync.sh | copy script"
+  template:
+    src: sync.sh
+    dest: sync.sh
+    mode: '0755'
+
+- name: "s3sync | sync.sh | copy script"
+  template:
+    src: sync_all.sh
+    dest: sync_all.sh
+    mode: '0755'
+
+- name: "s3sync | run_invalidation.sh | copy script"
+  template:
+    src: run_invalidation.sh
+    dest: run_invalidation.sh
+    mode: '0755'
+
+- name: "s3sync | doppelt.sh | copy script"
+  template:
+    src: doppelt.sh
+    dest: doppelt.sh
+    mode: '0755'
+
+- name: "s3sync | {{resultdata_name}} | env | copy environment"
+  template:
+    src: "{{ resultdata_env }}"
+    dest: "{{ resultdata_base_dir}}/.env"
+
+- name: "s3sync | pm2 stop resultdata"
+  command: pm2 stop resultdata
+  ignore_errors: true
+
+- name: "s3sync | pm2 start resultdata"
+  command: pm2 start resultdata
+  ignore_errors: true
+
+- name: "s3sync | encoding.sh | encoding script"
+  template:
+    src: encoding.sh
+    dest: encoding.sh
+    mode: '0755'

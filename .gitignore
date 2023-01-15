@@ -1,0 +1,12 @@
+# no key files
+keys/**
+keys/*
+keys
+production.env
+aws.env
+.env
+*.key
+*.pem
+password.txt
+**/all.yml
+inventories/production/group_vars/all.yml

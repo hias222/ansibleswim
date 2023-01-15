@@ -1,0 +1,15 @@
+- name: Run an executable using win_command
+  win_command: whoami.exe
+  register: output
+
+- name: debug
+  debug:
+    msg: "{{ output }}" 
+
+- name: Run an executable using win_command
+  win_command: "sc start minecraft2"
+  register: output
+
+- name: debug
+  debug:
+    msg: "{{ output }}" 

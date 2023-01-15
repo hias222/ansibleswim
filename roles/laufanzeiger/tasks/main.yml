@@ -1,0 +1,14 @@
+- name: "laufanzeiger | set vars | global_clean_all {{global_clean_all}}"
+  set_fact:
+    key_value: serial_data
+    clean_install: "{{global_clean_all}}"
+    laufanzeiger_base_dir: /opt/laufanzeiger/base
+    laufanzeiger_build_dir: /opt/laufanzeiger/build
+    laufanzeiger_repo: https://github.com/hias222/nuvoled.git
+    laufanzeiger_name: nuvoled
+    laufanzeiger_go_version: go1.18.3.linux-arm64.tar.gz
+
+- include_tasks: goinstall.yml
+  when: clean_install|bool
+
+- include_tasks: install.yml

@@ -1,0 +1,281 @@
+- name: "common | install base | global_clean_all {{global_clean_all}}"
+  debug: 
+    msg: "install base {{ ansible_architecture }}"
+
+- name: "common | set args"
+  set_fact:
+    key_value: npm
+    reboot_arm: false
+    arm_architecture: true
+    clean_install: "{{global_clean_all}}"
+    npm_download_file: node-v16.15.0-linux-arm64
+
+- name: "common | check aws"
+  debug: 
+    msg: "We are on aws"
+  when: aws_install|bool
+
+- name: "common | set args for x86_64"
+  set_fact: 
+    key_value: npm
+    arm_architecture: false
+    npm_download_file: node-v16.14.2-linux-x64
+  when: ansible_architecture=='x86_64'
+
+- name: "common | set args for armv7l"
+  set_fact: 
+    key_value: npm
+    arm_architecture: false
+    npm_download_file: node-v16.13.2-linux-armv7l
+  when: ansible_architecture=='armv7l'
+
+- name: "common | apt update "
+  become: true
+  apt:
+    update_cache: yes
+
+- name: common | Stop service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: stopped
+  when: use_cassandra|bool
+  ignore_errors: true
+
+- name: common | disable service cassandra
+  become: true
+  service:
+    name: cassandra
+    enabled: no
+  when: use_cassandra|bool
+  ignore_errors: true
+
+- name: "common | unstart/remove pm2"
+  become: true
+  command: "pm2 unstartup systemd"
+  register: output
+  when: clean_install|bool
+  ignore_errors: true
+
+- name: "common | reboot"
+  become: true
+  reboot:
+    msg: "Reboot initiated by Ansible"
+    connect_timeout: 5
+    reboot_timeout: 600
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+    test_command: whoami
+  when: 
+    - arm_architecture|bool 
+    - clean_install|bool
+    - not aws_install|bool
+    - reboot_arm
+
+- name: "common | install packages "
+  become: true
+  apt:
+    pkg:
+    - gcc
+    - git
+    - make
+    - cmake
+    - unzip
+    - curl
+    - libpng-dev
+    - g++
+    - ansible
+    - python3-setuptools
+    - libssl-dev
+    - jpnevulator
+    - mosquitto 
+    - mosquitto-clients
+    - net-tools
+    - nginx-full
+    - libnginx-mod-rtmp
+
+- name: "common | install packages "
+  become: true
+  apt:
+    pkg:
+    - build-essential #
+    - autoconf #
+    - libtool #
+    - pkg-config #
+    - nasm #
+    - dpkg #
+
+- name: "common | install python2.7 for cassandra "
+  become: true
+  apt:
+    pkg:
+    - python2.7
+  when: use_cassandra|bool
+
+- name: "common | rpi | wlan power save edit rc.local"
+  become: true
+  shell: iw wlan0 set power_save off
+  when: not aws_install|bool
+  ignore_errors: true
+
+- name: "common | install python node-sass "
+  become: true
+  apt:
+    pkg:
+    - python
+
+- name: "common | remove dir {{ npm_download_file}}"
+  become: true
+  file:
+    path: "/opt/{{ npm_download_file}}"
+    state: absent
+  when: clean_install|bool
+
+- name: "common | create dir {{ npm_download_file}}"
+  become: true
+  file:
+    path: "/opt/{{ npm_download_file}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "common | npm | extract {{ npm_download_file }} (clean_install=true)"
+  unarchive:
+    src: "{{ npm_download_file }}.tar.xz"
+    dest: /opt
+  when: clean_install|bool
+
+# error on pi login
+- name: "common | pm2 | add node to profile"
+  # become: true
+  shell: |
+    sed -i '/node/d' .profile 
+    echo "# set env for node" >> .profile
+    echo "if [ -d \"/opt/{{ npm_download_file }}/bin\" ] ; then # node env" >> .profile
+    echo "    PATH=\"/opt/{{ npm_download_file }}/bin:\$PATH\" # node env" >> .profile
+    echo "fi # node env" >> .profile
+  when: clean_install|bool
+
+- name: "common | npm | set links for npm and node"
+  become: true
+  shell: |
+    rm /usr/local/bin/node
+    ln -s /opt/{{ npm_download_file }}/bin/node /usr/local/bin/node
+    rm /usr/local/bin/npm
+    ln -s /opt/{{ npm_download_file }}/bin/npm /usr/local/bin/npm
+    rm /usr/local/bin/pm2
+    ln -s /opt/{{ npm_download_file }}/bin/pm2 /usr/local/bin/pm2
+  when: clean_install|bool
+  
+# iw wlan0 get power_save
+
+#- name: "common | npm | reset ssh connection"
+#  meta: reset_connection
+
+- name: "common | npm | run node -v"
+  shell: |
+    node -v
+  register: shell_output
+
+- name: "common | check npm"
+  debug: 
+    msg: "{{shell_output.stdout_lines}}"
+
+- name: "common | awscli copy and extract | clean_install -> true" 
+  shell: |
+    rm -rf aws/*
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
+    unzip -o awscliv2.zip >> /dev/null
+  when: clean_install|bool
+
+- name: "common | awscli install| clean_install -> true" 
+  shell: |
+    sudo ./aws/install
+  ignore_errors: true
+  when: clean_install|bool
+
+- name: "common | awscli install update | clean_install -> true" 
+  shell: |
+    sudo ./aws/install --update
+  when: clean_install|bool
+
+- name: "common | create dir .aws"
+  file:
+    path: ".aws"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "common | awscli | copy env "
+  ansible.builtin.template:
+    src: config
+    dest: .aws/
+    mode: '0500'
+
+- name: "common | awscli | copy env "
+  ansible.builtin.template:
+    src: credentials
+    dest: .aws/
+    mode: '0500'
+
+- name: "common | install node-sass - can take log - stop cassandra - load cache for apps"
+  community.general.npm:
+    name: node-sass
+    state: latest
+    global: true
+  when: 
+    - arm_architecture|bool 
+    - clean_install|bool
+  ignore_errors: true
+
+- name: "common | compile sass"
+  command: npm rebuild node-sass
+  when: 
+    - arm_architecture|bool 
+    - clean_install|bool
+
+- name: "common | npm pm2 global"
+  community.general.npm:
+    name: pm2
+    global: yes
+
+- name: "common | delete pm2 folder /home/{{ ansible_facts.user_id}}/.pm2"
+  become: true
+  file:
+    path: "/home/{{ ansible_facts.user_id }}/.pm2"
+    state: absent
+  when: clean_install|bool
+  ignore_errors: true
+
+- name: "common | npm | reset ssh connection"
+  meta: reset_connection
+
+#- name: "common | start pm2 | prepare scripts"
+#  command: pm2 startup systemd -u {{ ansible_facts.user_id }} --hp /home/{{ ansible_facts.user_id}}
+#  when: clean_install|bool
+#  ignore_errors: true
+
+- name: "common | start pm2 | /opt/{{ npm_download_file}}/bin"
+  become: true
+  command: "env PATH=$PATH:/opt/{{ npm_download_file}}/bin pm2 startup systemd -u {{ ansible_facts.user_id}} --hp /home/{{ ansible_facts.user_id}}"
+  register: output
+  when: clean_install|bool
+
+# become_user: root
+# become_method: enable
+# /opt/{{ npm_download_file}}/bin/pm2 startup {{ ansible_facts.user_id }} -u {{ ansible_facts.user_id }} --hp /home/{{ ansible_facts.user_id }}
+# sudo env PATH=$PATH:/opt/node-v12.18.3-linux-x64/bin pm2 startup ubuntu -u ubuntu --hp /home/ubuntu"]}
+
+- name: common | debug 
+  debug:
+    msg: "{{output.stdout}}"
+  when: clean_install|bool
+
+- name: "common | enable service pm2-{{ ansible_facts.user_id}}"
+  become: true
+  service:
+    name: "pm2-{{ ansible_facts.user_id}}"
+    enabled: yes
+  ignore_errors: true

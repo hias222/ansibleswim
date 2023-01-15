@@ -1,0 +1,19 @@
+## all default values
+
+# MQTT_DEBUG=false
+# MQTT, AWS, SQS 
+# SRC_MQTT_MODE=MQTT
+# SRC_CHANNEL_NAME=storechannel
+# PORT=4001
+# MQTT_URL=mqtt://localhost
+# MQTT_USERNAME_LOCAL=mqtt
+# MQTT_PASSWORD_LOCAL=welcome1
+
+PORT=4002
+KEYSPACE=colorado
+CONTACTPOINT=192.168.178.99:9042
+# CONTACTPOINT=127.0.0.1:9042
+LOCALDATACENTER='datacenter1'
+
+MQTT_DEBUG=false
+MQTT_URL=mqtt://ubuntu

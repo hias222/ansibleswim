@@ -1,0 +1,15 @@
+NUMBER_LANES={{ pool_lane_count }}
+PROPERTY_FILE=property.ini
+LENEX_BASE_DIR=/tmp
+
+HTTP_REST_PORT=3011
+
+MQTT_DEBUG=false
+
+DEST_MQTT_MODE=AWS
+
+DST_AWS_HOST='a101aihtfyydn6-ats.iot.eu-central-1.amazonaws.com'
+DST_AWS_KEYPATH='aws/colorado.private.key'
+DST_AWS_CERTPATH='aws/colorado.cert.pem'
+DST_AWS_CAPATH='aws/root-CA.crt'
+DST_AWS_CLIENTID='sdk-nodejs-d9122ba1-c0df-4470-a82f-6cd8b7c04e21'

@@ -1,0 +1,43 @@
+- name: "cameraoverlay | set vars | global_clean_all {{global_clean_all}}"
+  set_fact:
+    key_value: serial_data
+    clean_install: "{{global_clean_all}}"
+    cameraoverlay_base_dir: /opt/cameraoverlay/base
+    arm_architecture: true
+    cameraoverlay_repo: https://github.com/hias222/cameraoverlay.git
+    release_file_name: cameraoverlay_react.zip
+    release_url: https://github.com/hias222/cameraoverlay/releases/download
+
+- name: "cameraoverlay | remove dir {{cameraoverlay_base_dir}}"
+  become: true
+  file:
+    path: "{{ cameraoverlay_base_dir}}"
+    state: absent
+  when: clean_install|bool
+
+- name: "cameraoverlay | create dir {{ cameraoverlay_base_dir}}"
+  become: true
+  file:
+    path: "{{ cameraoverlay_base_dir }}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: "0755"
+
+- name: "cameraoverlay | create dir {{ nginx_overlay_dir}}"
+  become: true
+  file:
+    path: "{{ nginx_overlay_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: "0755"
+
+- name: "cameraoverlay build"
+  import_tasks: build.yml
+  when: build_from_scratch|bool
+
+- name: "cameraoverlay release"
+  import_tasks: release.yml
+  when: not build_from_scratch|bool
+

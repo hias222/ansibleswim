@@ -1,0 +1,25 @@
+[Unit]
+Description=cassandra
+After=network.target
+
+[Service] 
+PIDFile=/run/cassandra/cassandra.pid
+RuntimeDirectory=cassandra
+User={{os_install_user}}
+Group={{os_install_user}}
+ExecStart={{cassandra_base_dir}}/{{cassandra_file}}/bin/cassandra -p /run/cassandra/cassandra.pid
+WorkingDirectory={{cassandra_base_dir}}/{{cassandra_file}}
+Environment=CASSANDRA_HOME={{cassandra_base_dir}}/{{cassandra_file}}
+Environment=CASSANDRA_CONF={{cassandra_base_dir}}/{{cassandra_file}}/conf
+Environment=CASSANDRA_INCLUDE={{cassandra_base_dir}}/{{cassandra_file}}/bin/cassandra.in.sh
+Environment=CASSANDRA_OWNR={{os_install_user}}
+StandardOutput=journal
+StandardError=journal
+LimitNOFILE=100000
+LimitMEMLOCK=infinity
+LimitNPROC=32768
+LimitAS=infinity
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,116 @@
+- name: "obscontrol | set vars | global_clean_all {{global_clean_all}}"
+  set_fact:
+    key_value: serial_data
+    clean_install: "{{global_clean_all}}"
+    obscontrol_base_dir: /opt/obscontrol
+    obscontrol_server_dir: /opt/obscontrolserver
+    obscontrol_repo: https://github.com/hias222/obscontrol.git
+
+- name: "obscontrol | ufw allow 8080"
+  become: true
+  shell: 
+    cmd: ufw allow 3070
+  ignore_errors: true
+
+- name: "obscontrol | pm2 stop all"
+  command: pm2 stop all
+
+- name: obscontrol | Stop service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: stopped
+  ignore_errors: true
+
+- name: "obscontrol | remove dir {{obscontrol_base_dir}}"
+  become: true
+  file:
+    path: "{{ obscontrol_base_dir}}"
+    state: absent
+  when: clean_install|bool
+
+- name: "obscontrol | create dir {{ obscontrol_base_dir}}"
+  become: true
+  file:
+    path: "{{ obscontrol_base_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "obscontrol | git checkout {{obscontrol_repo}}"
+  git:
+    repo: "{{obscontrol_repo}}"
+    dest: "{{ obscontrol_base_dir}}"
+    force: yes
+
+- name: "obscontrol | Install {{ obscontrol_base_dir}} packages"
+  npm:
+    path: "{{ obscontrol_base_dir}}"
+    state: latest
+
+- name: "obscontrol | build {{ obscontrol_base_dir}}"
+  shell: 
+    cmd: npm run build
+    chdir: "{{ obscontrol_base_dir}}"
+
+- name: "obscontrol | create dir {{ obscontrol_server_dir }}"
+  become: true
+  file:
+    path: "{{ obscontrol_server_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+  
+- name: "obscontrol | copy files to server dir {{ obscontrol_server_dir}}"
+  shell: 
+    cmd: "cp -R * {{ obscontrol_server_dir}}"
+    chdir: "{{ obscontrol_base_dir}}/build"
+
+- name: "obscontrol | copy package.json {{ obscontrol_server_dir}}"
+  shell: 
+    cmd: "cp package.json {{ obscontrol_server_dir}}"
+    chdir: "{{ obscontrol_base_dir}}"
+
+- name: "obscontrol | copy swagger.yaml {{ obscontrol_server_dir}}"
+  shell: 
+    cmd: "cp swagger.yaml {{ obscontrol_server_dir}}"
+    chdir: "{{ obscontrol_base_dir}}"
+
+- name: "obscontrol | env | copy environment"
+  template:
+    src: production.env
+    dest: "{{ obscontrol_server_dir}}/.env"
+
+- name: "obscontrol | Install npm {{ obscontrol_server_dir}} packages"
+  npm:
+    path: "{{ obscontrol_server_dir}}"
+    global: "{{ npm_gloabal_install }}"
+    state: latest
+
+- name: "obscontrol | pm2 clear"
+  command: pm2 delete obscontrol 
+  args:
+    chdir: "{{ obscontrol_server_dir}}"
+  ignore_errors: true
+
+- name: "obscontrol | pm2 start"
+  command: pm2 start "npm run prod" --env production --name obscontrol -f
+  args:
+    chdir: "{{ obscontrol_server_dir}}"
+
+- name: "obscontrol | pm2 start all"
+  command: pm2 start all
+
+- name: "obscontrol | pm2"
+  command: pm2 save
+  args:
+    chdir: "{{ obscontrol_server_dir}}"
+
+- name: obscontrol | Start service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: restarted
+  ignore_errors: true

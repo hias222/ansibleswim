@@ -1,0 +1,116 @@
+- name: "webcam | set vars | global_clean_all {{global_clean_all}}"
+  set_fact:
+    key_value: serial_data
+    arm_architecture: true
+    clean_install: "{{global_clean_all}}"
+    webcam_base_dir: /opt/webcam/base
+    webcam_repo: https://github.com/mpromonet/v4l2rtspserver.git
+
+- name: Print all available facts
+  ansible.builtin.debug:
+    var: ansible_facts.user_id
+
+- name: "webcam | set args for x86_64"
+  set_fact: 
+    key_value: serial_data
+    arm_architecture: false
+  when: ansible_architecture=='x86_64'
+
+- name: "webcam | remove dir {{webcam_base_dir}}"
+  become: true
+  file:
+    path: "{{ webcam_base_dir}}"
+    state: absent
+  when: clean_install|bool
+
+- name: "webcam | create dir {{ webcam_base_dir}}"
+  become: true
+  file:
+    path: "{{ webcam_base_dir}}"
+    owner: "{{ ansible_facts.user_id}}"
+    group: "{{ ansible_facts.user_id}}"
+    state: directory
+    mode: '0755'
+
+- name: "webcam | git checkout {{webcam_repo}}"
+  git:
+    repo: "{{webcam_repo}}"
+    dest: "{{ webcam_base_dir}}"
+    force: yes
+
+- name: "webcam | build v4l2rtspserver"
+  shell: | 
+    cd {{ webcam_base_dir}}
+    cmake {{ webcam_base_dir}}
+    make -C {{ webcam_base_dir}}
+
+- name: "webcam | install v4l2rtspserver"
+  become: true
+  shell: | 
+    cd {{ webcam_base_dir}}
+    make -C {{ webcam_base_dir}} install
+
+
+- name: "webcam | set cam1 "
+  set_fact:
+    key_value: video_data
+    webcam_dev: video2
+    webcam_url: cam1
+    webcam_port: 8554
+
+- name: "webcam | install service "
+  become: true
+  template:
+    src: webcam.service
+    dest: /lib/systemd/system/webcam.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: reload systemd
+  become: true
+  command: systemctl daemon-reload
+
+- name: webcam | Enable service webcam
+  become: true
+  service:
+    name: webcam
+    enabled: no
+
+- name: webcam | Enable service webcam
+  become: true
+  service:
+    name: webcam
+    state: restarted
+
+- name: "webcam | set cam2 "
+  set_fact:
+    key_value: video_data
+    webcam_dev: video6
+    webcam_url: cam2
+    webcam_port: 8555
+
+- name: "webcam | install service cam2 "
+  become: true
+  template:
+    src: webcam.service
+    dest: /lib/systemd/system/webcam2.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: reload systemd
+  become: true
+  command: systemctl daemon-reload
+
+- name: webcam | Enable service webcam
+  become: true
+  service:
+    name: webcam2
+    enabled: no
+
+- name: webcam | Enable service webcam
+  become: true
+  service:
+    name: webcam2
+    state: restarted

@@ -1,0 +1,32 @@
+- name: "camereaoverlay | release"
+  debug:
+    msg: "start"
+
+## https://github.com/hias222/cameraoverlay/releases/tag/v0.0.1
+# https://github.com/hias222/cameraoverlay/releases/download/v0.0.1/cameraoverlay_react.zip
+# download_version
+- name: "camereaoverlay | Download {{ download_version }} to {{ cameraoverlay_base_dir}}"
+  get_url:
+    url: "{{ release_url }}/{{ download_version }}/{{ release_file_name }}"
+    dest: "{{ cameraoverlay_base_dir}}/{{ release_file_name }}"
+
+- name: "camereaoverlay | clear {{nginx_overlay_dir}}"
+  become: true
+  file:
+    path: "{{nginx_overlay_dir}}"
+    state: absent
+
+- name: "cameraoverlay | create dir {{ cameraoverlay_base_dir}}"
+  become: true
+  file:
+    path: "{{ nginx_overlay_dir }}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: "0755"
+
+- name: "camereaoverlay | unzip {{ cameraoverlay_base_dir}}/{{ release_file_name }} |  {{nginx_overlay_dir}}"
+  unarchive: 
+    src: "{{ cameraoverlay_base_dir}}/{{ release_file_name }}"
+    dest: "{{nginx_overlay_dir}}"
+    remote_src: True

@@ -1,0 +1,29 @@
+- name: "nginx | set vars | global_clean_all {{global_clean_all}}"
+  set_fact:
+    key_value: serial_data
+    clean_install: "{{global_clean_all}}"
+    nginx_config_dir: /etc/nginx/sites-available/
+    arm_architecture: true
+
+- name: "nginx | set args for x86_64"
+  set_fact: 
+    key_value: serial_data
+    arm_architecture: false
+  when: ansible_architecture=='x86_64'
+  
+- include_tasks: createCerts.yml
+  when: not aws_install|bool
+
+- include_tasks: nginx.yml
+  when: not aws_install|bool
+
+- include_tasks: awsnginx.yml
+  when: aws_install|bool
+
+- name: nginx | start service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: started
+  when: use_cassandra|bool
+  ignore_errors: true

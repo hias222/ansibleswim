@@ -1,0 +1,22 @@
+- name: "nginxfrontends | set vars | global_clean_all {{global_clean_all}}"
+  set_fact:
+    key_value: serial_data
+    clean_install: "{{global_clean_all}}"
+    frontends_dir: "{{ nginx_html_dir }}"
+    arm_architecture: true
+
+- name: "nginxfrontends | set args for x86_64"
+  set_fact: 
+    key_value: serial_data
+    arm_architecture: false
+  when: ansible_architecture=='x86_64'
+
+- include_tasks: frontend.yml
+
+- include_tasks: data.yml
+
+- name: nginx | nginx | Restart service nginx
+  become: true
+  service:
+    name: nginx
+    state: restarted

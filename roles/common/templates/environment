@@ -1,0 +1,3 @@
+# PATH for NODE
+PATH="/opt/{{npm_download_file}}/bin:$PATH"
+export PATH

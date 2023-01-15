@@ -1,0 +1,21 @@
+
+- name: "nginx | frontend | create dir {{ nginx_frontend_dir}}"
+  become: true
+  file:
+    path: "{{ nginx_frontend_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "nginx | frontend extract files/basic_frontend.tar.gz"
+  become: true
+  unarchive:
+    src: "files/basic_frontend.tar.gz"
+    dest: "{{ frontends_dir }}"
+
+- name: "nginx | nginx | copy index.html to {{ nginx_html_dir}}"
+  become: true
+  template:
+    src: index.html
+    dest: "{{ nginx_html_dir}}"

@@ -1,0 +1,11 @@
+- name: "resultdata | set vars | global_clean_all {{global_clean_all}}"
+  set_fact:
+    key_value: serial_data
+    clean_install: "{{global_clean_all}}"
+    resultdata_base_dir: /opt/resultdata/base
+    resultdata_build_dir: /opt/resultdata/build
+    resultdata_repo: https://github.com/hias222/resultdata.git
+    resultdata_name: resultdata
+    resultdata_env: local
+
+- include_tasks: buildmapper.yml 

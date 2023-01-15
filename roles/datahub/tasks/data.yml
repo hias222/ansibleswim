@@ -1,0 +1,18 @@
+# generate cassandra data
+
+- name: "datahub | data | create structure"
+  debug:
+    msg: "start with  {{ cassandra_base_dir }}/{{ cassandra_file }}"
+ 
+- name: "datahub | data | create structure {{ datahub_base_dir}}/data_model "
+  command: "{{ cassandra_base_dir }}/{{ cassandra_file }}/bin/cqlsh.py -f {{ item }}"
+  args:
+    chdir: "{{ datahub_base_dir}}/data_model"
+  loop:
+    - 01_lane_type.cql
+    - 02_heat_data_table.cql
+    - 03_heat_ids.cql
+    - 04_base_data.cql
+    - 05_base_data.cql
+  ignore_errors: true
+

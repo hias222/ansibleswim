@@ -1,0 +1,100 @@
+- name: serialsw | set vars
+  set_fact:
+    key_value: serial_data
+    serial_base_dir: /opt/colorado/serial
+    serial_build_dir: /opt/colorado/build
+    pogio_master_file: pigpio-master.zip
+    pigpio_base_dir: /opt/colorado/pigpio
+    linux_x86_64: false
+    linux_64_armv8: false
+    ftdi_lib_gz_name: libftd2xx-arm-v8-1.4.8.gz
+    external_lib_dir: externallib
+
+- name: "serialsw | stop colorado"
+  become: true
+  ansible.builtin.service:
+    name: colorado
+    state: stopped
+  when:
+      - ansible_facts['architecture'] == "aarch64"
+  ignore_errors: true
+
+- import_tasks: copylibs.yml
+
+# comdline.txt -relaxed
+# net.ifnames=0 dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=LABEL=writable rootfstype=ext4  elevator=deadline rootwait fixrtc iomem=relaxed
+
+- name: "serialsw | delete dir {{ serial_base_dir}}"
+  become: true
+  file:
+    path: "{{ serial_base_dir}}"
+    state: absent
+
+- name: "serialsw | create dir {{ serial_base_dir}}"
+  become: true
+  file:
+    path: "{{ serial_base_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "serialsw | delete dir {{ serial_build_dir}}"
+  become: true
+  file:
+    path: "{{ serial_build_dir}}"
+    state: absent
+
+- name: "serialsw | create dir {{ serial_build_dir}}"
+  become: true
+  file:
+    path: "{{ serial_build_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: serialsw | git checkout
+  git:
+    repo: https://github.com/hias222/serial.git
+    dest: "{{ serial_base_dir}}"
+
+- name: "serialsw | gpio off"
+  copy:
+    src: "checkapi"
+    dest: "{{ serial_base_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    mode: '0755'
+  when: not install_gpio_libs|bool
+
+- name: "serialsw | build serial"
+  become: true
+  shell: | 
+    cd {{serial_build_dir}}
+    cmake {{serial_base_dir}}
+    cmake --build {{serial_build_dir}}
+
+# install -v -m 744 files/colorado.service "${ROOTFS_DIR}/etc/systemd/system"
+
+- name: "serialsw | the binary dir"
+  debug:
+    msg: "binary in git directory /opt/colorado/serial/binaries/aarch64"
+  when:
+      - ansible_facts['architecture'] == "aarch64"
+
+- name: "serialsw | change mode"
+  become: true
+  shell: | 
+    chmod a+rwx /opt/colorado/serial/binaries/aarch64/*
+    cp /opt/colorado/serial/binaries/aarch64/serial /usr/bin/colorado 
+  when:
+      - ansible_facts['architecture'] == "aarch64"
+
+- name: "serialsw | start colorado"
+  become: true
+  ansible.builtin.service:
+    name: colorado
+    state: started
+  when:
+      - ansible_facts['architecture'] == "aarch64"

@@ -1,0 +1,84 @@
+- name: "displaysocket2 | set vars | global_clean_all {{global_clean_all}}"
+  set_fact:
+    key_value: serial_data
+    clean_install: "{{global_clean_all}}"
+    pm2_app_name: displaysocket2
+    displaysocket_base_dir: /opt/displaysocket2/base
+    displaysocket_repo: https://github.com/hias222/displaysocket2.git
+
+- name: "displaysocket2 | npm pm2 global"
+  npm:
+    name: pm2
+    global: yes
+
+- name: "displaysocket2 | ufw allow 4001"
+  become: true
+  shell: 
+    cmd: ufw allow 4001
+  ignore_errors: true
+    
+- name: "displaysocket2 | pm2"
+  command: pm2 delete app.js --name {{pm2_app_name}}
+  args:
+    chdir: "{{ displaysocket_base_dir}}"
+  ignore_errors: true
+  
+- name: "displaysocket2 | pm2"
+  command: pm2 save
+  args:
+    chdir: "{{ displaysocket_base_dir}}"
+  ignore_errors: true
+
+- name: "displaysocket2 | remove dir {{ displaysocket_base_dir}}"
+  become: true
+  file:
+    path: "{{ displaysocket_base_dir}}"
+    state: absent
+  when: clean_install|bool
+
+- name: "displaysocket2 | create dir {{ displaysocket_base_dir}}"
+  become: true
+  file:
+    path: "{{ displaysocket_base_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+
+- name: "displaysocket2 | git checkout {{displaysocket_repo}}"
+  git:
+    repo: "{{displaysocket_repo}}"
+    dest: "{{ displaysocket_base_dir}}"
+    force: true
+
+- name: "displaysocket2 | Install {{ displaysocket_base_dir}} packages"
+  npm:
+    path: "{{ displaysocket_base_dir}}"
+    global: "{{ npm_gloabal_install }}"
+    state: latest
+
+- name: "displaysocket2 | env | copy environment"
+  template:
+    src: .env
+    dest: "{{ displaysocket_base_dir}}"
+  when: not aws_install|bool
+
+- name: "displaysocket2 | set aws "
+  template:
+    src: aws.env
+    dest: "{{ displaysocket_base_dir}}/.env"
+  when: aws_install|bool
+
+- name: "displaysocket2 | pm2"
+  command: pm2 start app.js --name {{pm2_app_name}}
+  args:
+    chdir: "{{ displaysocket_base_dir}}"
+
+- name: "displaysocket2 | pm2"
+  command: pm2 save
+  args:
+    chdir: "{{ displaysocket_base_dir}}"
+
+
+# install -v -m 744 files/colorado.service "${ROOTFS_DIR}/etc/systemd/system"

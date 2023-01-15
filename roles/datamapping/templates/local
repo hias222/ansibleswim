@@ -1,0 +1,12 @@
+# datamapping property file
+NUMBER_LANES={{ pool_lane_count }}
+PROPERTY_FILE=property.ini
+LENEX_BASE_DIR=/tmp
+
+# local
+DEST_MQTT_HOST=localhost
+# mainchanne
+DEST_MQTT_TOPIC="mainchannel"
+HTTP_REST_PORT=3001
+
+

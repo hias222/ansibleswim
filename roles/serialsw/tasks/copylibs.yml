@@ -1,0 +1,65 @@
+- name: Show facts available on the system
+  debug:
+    var: ansible_facts['distribution']
+
+- name: serialsw | set file names
+  set_fact:
+    key_value: serial_data
+    linux_lib_name: libftd2xx.so.1.4.8
+    linux_lib_a_name: libftd2xx.a
+    linux_lib_txt_name: libftd2xx.txt
+    lib_destination: /lib
+
+- name: serialsw | check debian 64
+  set_fact:
+    key_value: serial_data
+    linux_x86_64: true
+    ftdi_directory: linux
+  when:
+      - ansible_facts['architecture'] == "x86_64"
+      - ansible_facts['distribution_file_variety'] == "Debian"
+      - ansible_facts['distribution_major_version'] == "20"
+
+- name: serialsw | check aarch64
+  set_fact:
+    key_value: serial_data
+    linux_64_armv8: true
+    ftdi_directory: armv8
+  when:
+      - ansible_facts['architecture'] == "aarch64"
+
+- name: "serialsw | copy libs {{ftdi_directory}}/{{linux_lib_name}} to {{lib_destination}}"
+  become: true
+  copy:
+    src: "{{ftdi_directory}}/{{linux_lib_name}}"
+    dest: "{{lib_destination}}/{{linux_lib_name}}"
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: "serialsw | copy libs {{ftdi_directory}}/{{linux_lib_a_name}} to {{lib_destination}}"
+  become: true
+  copy:
+    src: "{{ftdi_directory}}/{{linux_lib_a_name}}"
+    dest: "{{lib_destination}}/{{linux_lib_a_name}}"
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: "serialsw | copy libs {{ftdi_directory}}/{{linux_lib_txt_name}} to {{lib_destination}}"
+  become: true
+  copy:
+    src: "{{ftdi_directory}}/{{linux_lib_txt_name}}"
+    dest: "{{lib_destination}}/{{linux_lib_txt_name}}"
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: "serialsw | link linux64 {{lib_destination}}/libftd2xx.so {{lib_destination}}/{{linux_lib_name}}"
+  become: true
+  file:
+    dest: "{{lib_destination}}/libftd2xx.so"
+    src: "{{lib_destination}}/{{linux_lib_name}}"
+    owner: root
+    group: root
+    state: link

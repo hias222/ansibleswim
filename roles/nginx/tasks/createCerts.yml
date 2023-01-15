@@ -1,0 +1,106 @@
+- name: "nginx | createCerts | extfile.ext "
+  become: true
+  template:
+    src: extfile.ext
+    dest: /etc/ssl/
+    owner: root
+    group: root
+    mode: '0644'
+  when: clean_install|bool
+
+- name: "nginx | createCerts | config.cnf "
+  become: true
+  template:
+    src: config.cnf
+    dest: /etc/ssl/
+    owner: root
+    group: root
+    mode: '0644'
+  when: clean_install|bool
+
+- name: "nginx | createCerts | pass "
+  become: true
+  template:
+    src: password.txt
+    dest: /etc/ssl/
+    owner: root
+    group: root
+    mode: '0644'
+  when: clean_install|bool
+
+- name: "nginx | createCerts | myCA.key "
+  become: true
+  template:
+    src: myCA.key
+    dest: /etc/ssl/private
+    owner: root
+    group: root
+    mode: '0644'
+  when: clean_install|bool
+
+- name: "nginx | createCerts | myCA.pem "
+  become: true
+  template:
+    src: myCA.pem
+    dest: /etc/ssl/certs
+    owner: root
+    group: root
+    mode: '0644'
+  when: clean_install|bool
+
+- name: "nginx | createCerts | myCA.pem "
+  become: true
+  template:
+    src: myCA.pem
+    dest: "{{ nginx_html_dir }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: clean_install|bool
+
+- name: "nginx | createCerts | "
+  become: true
+  shell: |
+    openssl genrsa -out /etc/ssl/private/{{ nginx_domain_name}}.key 2048
+    openssl req -new -key /etc/ssl/private/{{ nginx_domain_name}}.key -out /etc/ssl/certs/{{ nginx_domain_name}}.csr -config /etc/ssl/config.cnf
+    openssl x509 -req -in /etc/ssl/certs/{{ nginx_domain_name}}.csr -CA /etc/ssl/certs/myCA.pem -CAkey /etc/ssl/private/myCA.key -CAcreateserial -out /etc/ssl/certs/{{ nginx_domain_name}}.crt -days 825 -sha256 -extfile /etc/ssl/extfile.ext -passin file:/etc/ssl/password.txt
+    ufw allow 'Nginx Full'
+    ufw delete allow 'Nginx HTTP'
+  when: clean_install|bool
+  register: result
+  ignore_errors: true
+
+- name: "nginx | debug|"
+  become: true
+  debug:
+    var: result.stderr
+    verbosity: 0
+  when: clean_install|bool
+
+- name: "nginx | stdout|"
+  become: true
+  debug:
+    var: result.stdout
+    verbosity: 0
+  when: clean_install|bool
+
+## copy files
+# openssl req -x509 -sha256 -days 365 -key server.key -out server.crt -config config.cnf
+# openssl req -x509 -nodes -days 365 -newkey rsa:4096 -out server.crt -config config.cnf
+
+- name: "nginx | createCerts | copy ssl config to {{ nginx_config_dir}}"
+  become: true
+  template:
+    src: defaultssl
+    dest: "{{ nginx_config_dir}}"
+
+- name: "nginx | createCerts | create link "
+  become: true
+  file:
+    src: "{{ nginx_config_dir}}/defaultssl"
+    dest: /etc/nginx/sites-enabled/defaultssl
+    owner: root
+    group: root
+    state: link
+    
+# ln -s {{ nginx_config_dir}}/defaultssl /etc/nginx/sites-enabled/

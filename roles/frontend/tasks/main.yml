@@ -1,0 +1,86 @@
+- name: "frontend | set vars | global_clean_all {{global_clean_all}}"
+  set_fact:
+    key_value: serial_data
+    arm_architecture: true
+    clean_install: "{{global_clean_all}}"
+    frontend_base_dir: /opt/frontend/base
+    frontend_repo: https://github.com/hias222/frontend.git
+
+- name: frontend | Stop service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: stopped
+  ignore_errors: true
+
+- name: "frontend | set args for x86_64"
+  set_fact: 
+    key_value: serial_data
+    arm_architecture: false
+  when: ansible_architecture=='x86_64'
+
+- name: "frontend | remove dir {{frontend_base_dir}}"
+  become: true
+  file:
+    path: "{{ frontend_base_dir}}"
+    state: absent
+  when: clean_install|bool
+
+- name: "frontend | pm2 stop all"
+  command: pm2 stop all
+  ignore_errors: true
+
+- name: "frontend | create dir {{ frontend_base_dir}}"
+  become: true
+  file:
+    path: "{{ frontend_base_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "frontend | create dir {{ nginx_frontend_dir}}"
+  become: true
+  file:
+    path: "{{ nginx_frontend_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "frontend | git checkout {{frontend_repo}}"
+  git:
+    repo: "{{frontend_repo}}"
+    dest: "{{ frontend_base_dir}}"
+    force: yes
+
+- name: "frontend | Install {{ frontend_base_dir}} packages"
+  npm:
+    path: "{{ frontend_base_dir}}"
+    global: "{{ npm_gloabal_install }}"
+    state: latest
+
+- name: "frontend | env | copy environment"
+  template:
+    src: .env
+    dest: "{{ frontend_base_dir}}"
+
+- name: "frontend | build {{ frontend_base_dir}}"
+  shell: 
+    cmd: npm run build
+    chdir: "{{ frontend_base_dir}}"
+
+- name: "frontend | cp {{frontend_base_dir}}/* to  {{nginx_frontend_dir}}"
+  become: true
+  shell: cp -rf {{frontend_base_dir}}/build/* {{nginx_frontend_dir}}
+
+- name: "frontend | pm2 start all"
+  command: pm2 start all
+  ignore_errors: true
+
+- name: frontend | Stop service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: restarted
+  ignore_errors: true

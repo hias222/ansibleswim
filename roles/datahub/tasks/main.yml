@@ -1,0 +1,119 @@
+- name: "datahub | set vars | global_clean_all {{global_clean_all}}"
+  set_fact:
+    key_value: serial_data
+    clean_install: "{{global_clean_all}}"
+    datahub_base_dir: /opt/datahub
+    datahub_server_dir: /opt/datahubserver
+    datahub_repo: https://github.com/hias222/datahub.git
+
+- name: "datahub | ufw allow 8080"
+  become: true
+  shell: 
+    cmd: ufw allow 8080
+  ignore_errors: true
+
+- name: "datahub | pm2 stop all"
+  command: pm2 stop all
+  ignore_errors: true
+
+- name: datahub | Stop service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: restarted
+  ignore_errors: true
+
+- name: "datahub | remove dir {{datahub_base_dir}}"
+  become: true
+  file:
+    path: "{{ datahub_base_dir}}"
+    state: absent
+  when: clean_install|bool
+
+- name: "datahub | create dir {{ datahub_base_dir}}"
+  become: true
+  file:
+    path: "{{ datahub_base_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "datahub | git checkout {{datahub_repo}}"
+  git:
+    repo: "{{datahub_repo}}"
+    dest: "{{ datahub_base_dir}}"
+    force: yes
+
+- name: "datahub | Install {{ datahub_base_dir}} packages"
+  npm:
+    path: "{{ datahub_base_dir}}"
+    state: latest
+
+- name: "datahub | create dir {{ datahub_base_dir}}/env"
+  become: true
+  file:
+    path: "{{ datahub_base_dir}}/env"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "datahub | env | copy environment"
+  template:
+    src: production.env
+    dest: "{{ datahub_base_dir}}/env"
+  when: not aws_install|bool
+
+- name: "datahub | env | copy environment"
+  template:
+    src: aws.env
+    dest: "{{ datahub_base_dir}}/env/production.env"
+  when: aws_install|bool
+
+- name: "datahub | build {{ datahub_base_dir}}"
+  shell: 
+    cmd: npm run build
+    chdir: "{{ datahub_base_dir}}"
+
+- name: "datahub | create dir {{ datahub_server_dir }}"
+  become: true
+  file:
+    path: "{{ datahub_server_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+  
+- name: "datahub | copy files to server dir {{ datahub_server_dir}}"
+  shell: 
+    cmd: "cp -R * {{ datahub_server_dir}}"
+    chdir: "{{ datahub_base_dir}}/dist"
+
+- name: "datahub | Install npm {{ datahub_server_dir}} packages"
+  npm:
+    path: "{{ datahub_server_dir}}"
+    global: "{{ npm_gloabal_install }}"
+    state: latest
+
+- include_tasks: data.yml
+  ignore_errors: true
+
+- name: "datahub | pm2 clear"
+  command: pm2 delete datahub 
+  args:
+    chdir: "{{ datahub_server_dir}}"
+  ignore_errors: true
+
+- name: "datahub | pm2 start"
+  command: pm2 start "npm run start" --name datahub -f
+  args:
+    chdir: "{{ datahub_server_dir}}"
+
+- name: "datahub | pm2 start all"
+  command: pm2 start all
+
+- name: "datahub | pm2"
+  command: pm2 save
+  args:
+    chdir: "{{ datahub_server_dir}}"

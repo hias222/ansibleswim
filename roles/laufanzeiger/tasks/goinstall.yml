@@ -1,0 +1,16 @@
+- name: "laufanzeiger | goinstall | Download {{ laufanzeiger_go_version }} Unarchive a file that needs to be downloaded (added in 2.0)"
+  become: true
+  ansible.builtin.unarchive:
+    src: https://go.dev/dl/{{ laufanzeiger_go_version }}
+    dest: /usr/local
+    remote_src: yes
+
+- name: "laufanzeiger | goinstall | Create a symbolic link"
+  become: true
+  ansible.builtin.file:
+    src: /usr/local/go/bin/go
+    dest: /usr/bin/go
+    owner: root
+    group: root
+    state: link
+

@@ -1,0 +1,23 @@
+- name: "datamapping | copycerts | {{datamapping_name}} | create dir {{ datamapping_build_dir}}"
+  become: true
+  file:
+    path: "{{ datamapping_base_dir}}/aws/"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "datamapping | copycerts | {{datamapping_name}} | copy environment"
+  copy:
+    src: "files/root-CA.crt"
+    dest: "{{ datamapping_base_dir}}/aws/"
+
+- name: "datamapping | copycerts | {{datamapping_name}} | copy environment"
+  copy:
+    src: "files/colorado.cert.pem"
+    dest: "{{ datamapping_base_dir}}/aws/"
+
+- name: "datamapping | copycerts | {{datamapping_name}} | copy environment"
+  copy:
+    src: "files/colorado.private.key"
+    dest: "{{ datamapping_base_dir}}/aws/"

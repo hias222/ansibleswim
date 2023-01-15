@@ -1,0 +1,23 @@
+- name: "awsnginx | copy default environment"
+  become: true
+  template:
+    src: awsdefault
+    dest: "{{ nginx_config_dir}}/default"
+
+- name: "awsnginx | copy awsindex.html"
+  become: true
+  template:
+    src: awsindex.html
+    dest: "{{ nginx_html_dir}}/index.html"
+
+- name: awsnginx | Enable service nginx
+  become: true
+  service:
+    name: nginx
+    enabled: yes
+
+- name: awsnginx | Restart service nginx
+  become: true
+  service:
+    name: nginx
+    state: restarted

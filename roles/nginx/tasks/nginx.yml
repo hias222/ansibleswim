@@ -1,0 +1,80 @@
+- name: "nginx | nginx | copy correct addRtmpToNginx.sh"
+  template:
+    src: addRtmpToNginx.sh
+    dest: "/home/{{ ansible_facts.user_id }}"
+    mode: '0755'
+
+- name: "nginx | nginx | execute addRtmpToNginx.sh"
+  become: true
+  shell:
+    cmd: "/home/{{ ansible_facts.user_id }}/addRtmpToNginx.sh"
+    chdir: "/home/{{ ansible_facts.user_id }}"
+
+- name: "nginx | nginx | copy default environment"
+  become: true
+  template:
+    src: default
+    dest: "{{ nginx_config_dir}}"
+
+- name: "nginx | ufw allow 1935/tcp"
+  become: true
+  shell: 
+    cmd: ufw allow 1935/tcp
+  ignore_errors: true
+
+- name: "nginx | nginx | copy mime.types"
+  become: true
+  template:
+    src: files/mime.types
+    dest: /etc/nginx
+
+- name: "nginx | nginx | copy index.html"
+  become: true
+  template:
+    src: index.html
+    dest: "{{ nginx_html_dir}}"
+
+- name: "nginx | nginx | create rtmp"
+  become: true
+  file:
+    path:  "{{ nginx_html_dir}}/rtmp"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "nginx | nginx | copy stat.xsl"
+  template:
+    src: "files/stat.xsl"
+    dest: "{{ nginx_html_dir}}/rtmp"
+    mode: '0755'
+
+- name: "nginx | nginx | create hls"
+  become: true
+  file:
+    path:  "{{ nginx_html_dir}}/stream/hls"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "nginx | nginx | create dash"
+  become: true
+  file:
+    path:  "{{ nginx_html_dir}}/stream/dash"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: nginx | nginx | Enable service nginx
+  become: true
+  service:
+    name: nginx
+    enabled: yes
+
+- name: nginx | nginx | Restart service nginx
+  become: true
+  service:
+    name: nginx
+    state: restarted

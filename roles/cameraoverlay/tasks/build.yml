@@ -1,0 +1,70 @@
+- name: cameraoverlay | Stop service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: stopped
+  ignore_errors: true
+
+- name: "cameraoverlay | set args for x86_64"
+  set_fact:
+    key_value: serial_data
+    arm_architecture: false
+  when: ansible_architecture=='x86_64'
+
+- name: "cameraoverlay | pm2 stop all"
+  command: pm2 stop all
+  ignore_errors: true
+
+- name: "cameraoverlay | debug"
+  debug:
+    msg: "on {{ ansible_facts.user_id }} change firewall sudo ufw allow http"
+
+- name: "cameraoverlay | ufw allow http"
+  become: true
+  shell:
+    cmd: ufw allow http
+  ignore_errors: true
+
+
+- name: "cameraoverlay | git checkout {{cameraoverlay_repo}}"
+  git:
+    repo: "{{cameraoverlay_repo}}"
+    dest: "{{ cameraoverlay_base_dir}}"
+    force: yes
+
+- name: "cameraoverlay | Install {{ cameraoverlay_base_dir}} packages"
+  npm:
+    path: "{{ cameraoverlay_base_dir}}"
+    global: "{{ npm_gloabal_install }}"
+    state: latest
+
+- name: "cameraoverlay | env | copy environment"
+  template:
+    src: .env
+    dest: "{{ cameraoverlay_base_dir}}"
+
+# npm rebuild node-sass ??
+
+- name: "cameraoverlay | build {{ cameraoverlay_base_dir}}"
+  shell:
+    cmd: npm run build
+    chdir: "{{ cameraoverlay_base_dir}}"
+
+- name: "cameraoverlay | cp {{cameraoverlay_base_dir}}/* to  {{nginx_overlay_dir}}"
+  become: true
+  shell: cp -rf {{cameraoverlay_base_dir}}/build/* {{nginx_overlay_dir}}
+
+- name: "cameraoverlay | pm2 start all"
+  command: pm2 start all
+  ignore_errors: true
+
+- name: "cameraoverlay | pm2 save"
+  command: pm2 save
+  ignore_errors: true
+
+- name: cameraoverlay | cassandra | start service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: started
+  ignore_errors: true

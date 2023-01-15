@@ -1,0 +1,46 @@
+- name: "nginx | frontend | create dir {{ frontends_dir }}/data"
+  become: true
+  file:
+    path: "{{ frontends_dir }}/data"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "nginx | frontend copy files/data.xyz"
+  become: true
+  ansible.builtin.copy:
+    src: "files/video2.mp4"
+    dest: "{{ frontends_dir }}/data"
+    mode: '0755'
+
+- name: "nginx | frontend copy files/data.xyz"
+  become: true
+  ansible.builtin.copy:
+    src: "files/video1.mp4"
+    dest: "{{ frontends_dir }}/data"
+    mode: '0755'
+
+- name: "nginx | frontend copy files/data3.xyz"
+  become: true
+  ansible.builtin.copy:
+    src: "files/video3.mp4"
+    dest: "{{ frontends_dir }}/data"
+    mode: '0755'
+
+
+- name: "nginx | frontend copy files/data4.xyz"
+  become: true
+  ansible.builtin.copy:
+    src: "files/video4.mp4"
+    dest: "{{ frontends_dir }}/data"
+    mode: '0755'
+
+
+- name: "nginx | frontend copy files/data5.xyz"
+  become: true
+  ansible.builtin.copy:
+    src: "files/video5.mp4"
+    dest: "{{ frontends_dir }}/data"
+    mode: '0755'
+

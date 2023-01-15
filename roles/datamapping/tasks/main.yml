@@ -1,0 +1,28 @@
+- name: "datamapping | set vars | global_clean_all {{global_clean_all}} | lane count | {{ pool_lane_count }}"
+  set_fact:
+    key_value: serial_data
+    clean_install: "{{global_clean_all}}"
+    datamapping_base_dir: /opt/datamapping/base
+    datamapping_build_dir: /opt/datamapping/build
+    datamapping_repo: https://github.com/hias222/datamapping.git
+    datamapping_name: map2local
+    datamapping_env: local
+
+- include_tasks: buildmapper.yml
+
+- name: "datamapping | set vars | global_clean_all {{global_clean_all}}"
+  set_fact:
+    key_value: serial_data
+    clean_install: "{{global_clean_all}}"
+    datamapping_base_dir: /opt/cloudmapping/base
+    datamapping_build_dir: /opt/cloudmapping/build
+    datamapping_repo: https://github.com/hias222/datamapping.git
+    datamapping_name: map2cloud
+    datamapping_env: aws
+  when: mapper_cloud|bool
+
+- include_tasks: buildmapper.yml
+  when: mapper_cloud|bool
+
+- include_tasks: copycerts.yml
+  when: mapper_cloud|bool

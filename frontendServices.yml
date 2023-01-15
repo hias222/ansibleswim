@@ -1,0 +1,8 @@
+- hosts: all
+  roles:
+    - displayweb
+    - displaylive
+    - frontend2
+    - adminweb
+    - nginx
+    - cameraoverlay

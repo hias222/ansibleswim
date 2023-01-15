@@ -1,0 +1,97 @@
+ubuntu ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='/Users/MFU/projects/private/schwimmen/ansibleswim/keys/id_rsa'
+192.168.56.103 ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='/Users/matthiasfuchs/projects/schwimmen/ansibleswim/keys/rpi'
+192.168.178.152 ansible_ssh_port=22 ansible_ssh_user='pi' ansible_ssh_private_key_file='/Users/matthiasfuchs/projects/schwimmen/ansibleswim/keys/rpi'
+192.168.178.149 ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='/Users/MFU/projects/private/schwimmen/ansibleswim/keys/id_rsa'
+colorado01 ansible_ssh_port=22 ansible_ssh_user='pi' ansible_ssh_private_key_file='/Users/MFU/projects/private/schwimmen/ansibleswim/keys/id_rsa'
+18.185.34.68 ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='/Users/MFU/.aws/ec2-key-pair.pem'
+3.64.9.1 ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='/Users/MFU/.aws/ec2-key-pair.pem'
+swim.fritz.box ansible_ssh_port=22 ansible_ssh_user='pi' ansible_ssh_private_key_file='/Users/MFU/projects/private/schwimmen/ansibleswim/keys/id_rsa'
+swim2.fritz.box ansible_ssh_port=22 ansible_ssh_user='pi' ansible_ssh_private_key_file='/Users/MFU/projects/private/schwimmen/ansibleswim/keys/id_rsa'
+jetson.fritz.box ansible_ssh_port=22 ansible_ssh_user='jetson' ansible_ssh_private_key_file='~/.keys/id_rsa'
+rockpi-4b.fritz.box ansible_ssh_port=22 ansible_ssh_user='rock' ansible_ssh_private_key_file='/Users/MFU/projects/private/schwimmen/ansibleswim/keys/id_rsa'
+
+[win]
+192.168.178.128
+
+[win:vars]
+ansible_user=max
+ansible_password=max
+ansible_connection=winrm
+ansible_winrm_transport=basic
+ansible_winrm_server_cert_validation=ignore
+
+[rpi]
+ubuntu
+
+[rpi:vars]
+aws_install=false
+nginx_domain_name=ubuntu.fritz.box
+nginx_aws_name=www.swimdata.de
+mapper_cloud=true
+rclone_folder=splash
+meeting_long_name="Bezirksmeisterschaft Mittelfranken 2022"
+
+[swim]
+swim.fritz.box
+
+[swim:vars]
+aws_install=false
+mapper_cloud=true
+nginx_domain_name=swim.fritz.box
+nginx_aws_name=www.swimdata.de
+rclone_folder=splash
+meeting_long_name="Bezirks Kurzbahn- und Sprintmeisterschaften 2022"
+
+[jetson]
+jetson.fritz.box
+
+[jetson:vars]
+aws_install=false
+mapper_cloud=false
+nginx_domain_name=jetson.fritz.box
+nginx_aws_name=www.swimdata.de
+rclone_folder=splash
+meeting_long_name="Bezirks Kurzbahn- und Sprintmeisterschaften 2022"
+
+[rockpi]
+rockpi-4b.fritz.box
+
+[rockpi:vars]
+aws_install=false
+mapper_cloud=false
+nginx_domain_name=rockpi-4b.fritz.box
+nginx_aws_name=www.swimdata.de
+rclone_folder=splash
+meeting_long_name="Nürnberger Lebkuchenschwimmen"
+
+[swim2]
+swim2.fritz.box
+
+[swim2:vars]
+aws_install=false
+nginx_domain_name=swim2.fritz.box
+
+[vmbox]
+192.168.56.103
+
+[client]
+192.168.178.152
+
+[client:vars]
+global_clean_all=true
+
+[webcam]
+192.168.178.152
+
+[baseaws]
+54.93.219.51
+
+[baseaws:vars]
+aws_install=true
+
+[wsaws]
+18.185.34.68
+
+[wsaws:vars]
+aws_install=true
+nginx_aws_name=www.swimdata.de

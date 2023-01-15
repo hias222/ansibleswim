@@ -1,0 +1,54 @@
+######################################
+### Installation base
+#################################
+
+# npm and cassandra bins install with global true
+# overall
+global_clean_all: false
+npm_gloabal_install: no
+# shoulkd work, but not necassary
+install_gpio_libs: false
+# the preferred way to use ftdi serial - usb converter
+use_ftdi_serial: true
+# implemeted in some react frontend parts
+build_from_scratch: true
+download_version: v0.0.1
+# install_user_os: ubuntu -- ansible_facts.user_id
+# obsolete nginx_server_name: ubuntu
+nginx_live_dir: /usr/share/nginx/html/live
+nginx_display_dir: /usr/share/nginx/html/display
+nginx_frontend_dir: /usr/share/nginx/html/frontend
+nginx_admin_dir: /usr/share/nginx/html/admin
+nginx_html_dir: /usr/share/nginx/html
+nginx_peer_dir: /usr/share/nginx/html/peer
+nginx_swimmenu_dir: /usr/share/nginx/swimmenu
+nginx_overlay_dir: /usr/share/nginx/html/overlay
+nginx_camera_dir: /usr/share/nginx/html/camera
+cassandra_base_dir: /opt/cassandra
+cassandra_file: apache-cassandra-3.11.7
+# name of RPI out of DNS, important for certs, see also details in nginx scripts
+nginx_domain_name: colorado01.fritz.box
+
+# folder to user for s3 upload for splash meta data
+s3sync_shared_folder: /opt/shared
+
+#####################
+### Application specific
+######################## 
+
+# configurations for pool etc - not implemented yet
+pool_lane_count: 8
+# from top to down number 1 to xxx -> true
+pool_lane_order_normal: true
+# first lane number true = 1, false = 0
+pool_first_lane_one: true 
+
+##########################
+### Cloud Environment
+###########################
+
+# install second process for cloud upload
+mapper_cloud: false
+#
+AWS_ACCESS_KEY_ID: YXXXX
+AWS_SECRET_ACCESS_KEY: xxxxx

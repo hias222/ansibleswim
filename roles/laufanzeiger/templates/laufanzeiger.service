@@ -1,0 +1,15 @@
+[Unit]
+Description=laufanzeiger
+After=network.target
+
+[Service] 
+ExecStart=/usr/bin/laufanzeiger -mqtt jetson.fritz.box
+WorkingDirectory=/opt/laufanzeiger/base
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=laufanzeiger
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target

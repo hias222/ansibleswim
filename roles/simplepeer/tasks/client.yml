@@ -1,0 +1,76 @@
+- name: "simplepeerclient | set vars | global_clean_all {{global_clean_all}}"
+  set_fact:
+    key_value: serial_data
+    clean_install: "{{global_clean_all}}"
+    simplepeerclient_base_dir: /opt/simplepeerclient/base
+    arm_architecture: true
+    simplepeerclient_repo: https://github.com/hias222/webcam.git
+
+- name: "simplepeerclient | remove dir {{simplepeerclient_base_dir}}"
+  become: true
+  file:
+    path: "{{ simplepeerclient_base_dir}}"
+    state: absent
+  when: clean_install|bool
+
+- name: displayweb | Stop service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: stopped
+  ignore_errors: true
+
+- name: "simplepeerclient | create dir {{ simplepeerclient_base_dir}}"
+  become: true
+  file:
+    path: "{{ simplepeerclient_base_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "simplepeerclient | create dir {{ nginx_peer_dir}}"
+  become: true
+  file:
+    path: "{{ nginx_peer_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "simplepeerclient | git checkout {{simplepeerclient_repo}}"
+  git:
+    repo: "{{simplepeerclient_repo}}"
+    dest: "{{ simplepeerclient_base_dir}}"
+    force: yes
+
+- name: "simplepeerclient | env | copy environment {{ simplepeerclient_base_dir}}/client/.env"
+  template:
+    src: env
+    dest: "{{ simplepeerclient_base_dir}}/client/.env"
+
+- name: "simplepeerclient | Install {{ simplepeerclient_base_dir}} packages"
+  npm:
+    path: "{{ simplepeerclient_base_dir}}/client"
+    global: "{{ npm_gloabal_install }}"
+    state: latest
+
+- name: "simplepeerclient | build {{ simplepeerclient_base_dir}}"
+  shell: 
+    cmd: npm run build
+    chdir: "{{ simplepeerclient_base_dir}}/client"
+
+- name: "simplepeerclient | cp {{simplepeerclient_base_dir}}/* to  {{nginx_peer_dir}}"
+  become: true
+  shell: cp -rf {{simplepeerclient_base_dir}}/client/build/* {{nginx_peer_dir}}
+
+- name: simplepeerclient | start service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: started
+  ignore_errors: true
+
+- name: "simplepeerclient | pm2 start all"
+  command: pm2 start all
+  ignore_errors: true

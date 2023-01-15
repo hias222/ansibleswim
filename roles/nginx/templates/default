@@ -1,0 +1,163 @@
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+
+    index index.html index.htm index.nginx-debian.html;
+	# root /var/www/html;
+    root /usr/share/nginx/html;
+	index index.html index.htm index.nginx-debian.html;
+
+    client_max_body_size 1000M;
+
+	server_name _;
+
+	location / {
+		index index.html;
+		# try_files $uri /index.html =404;
+	}
+
+	# rtmp stat
+    location /stat {
+        rtmp_stat all;
+        rtmp_stat_stylesheet stat.xsl;
+    }
+
+    location /stat.xsl {
+        root {{ nginx_html_dir}}/rtmp;
+    }
+
+    # rtmp control
+    location /control {
+        rtmp_control all;
+    }
+
+	location /dash {
+        add_header Access-Control-Allow-Origin *;
+        root {{ nginx_html_dir}}/stream;
+    }
+	
+	location /hls {
+        add_header Access-Control-Allow-Origin *;
+        root {{ nginx_html_dir}}/stream;
+    }
+
+	# admin configs
+	
+	location /datamapping/ {
+    	proxy_pass http://localhost:3001/datamapping/;
+	}
+	
+    location /obscontrol/ {
+    	proxy_pass http://localhost:3070/obscontrol/;
+	}
+
+	location /datahub/ {
+    	proxy_pass http://localhost:8080/datahub/;
+	}
+
+	location /resultdata/ {
+    	proxy_pass http://localhost:3002/resultdata/;
+	}
+
+	location /ws/ {
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $host;
+
+      proxy_pass http://localhost:4001/ws/;
+
+      # enable WebSockets
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+    }
+
+	location /ws2/ {
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $host;
+
+      proxy_pass http://localhost:4002/ws/;
+
+      # enable WebSockets
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+    }
+
+	location /wsmqtt/ {
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $host;
+
+      proxy_pass http://localhost:9001/wsmqtt/;
+
+      # enable WebSockets
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+    }
+
+	location /peerws/ {
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $host;
+
+      proxy_pass http://localhost:8000/peerws/;
+
+      # enable WebSockets
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+    }
+
+	location /soundws/ {
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $host;
+
+      proxy_pass http://localhost:8081/soundws/;
+
+      # enable WebSockets
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+    }
+
+	location ^~ /admin {
+   		try_files $uri $uri/ /admin/index.html;
+	}
+
+	location ^~ /display {
+   		try_files $uri $uri/ /display/index.html;
+	}
+
+	location ^~ /frontend {
+   		try_files $uri $uri/ /frontend/index.html;
+	}
+
+	location ^~ /sound {
+   		try_files $uri $uri/ /sound/index.html;
+	}
+
+	location ^~ /live {
+   		try_files $uri $uri/ /live/index.html;
+	}
+
+    location ^~ /overlay {
+   		try_files $uri $uri/ /overlay/index.html;
+	}
+
+	location ^~ /peer {
+   		try_files $uri $uri/ /peer/index.html;
+	}
+
+	location ^~ /camera {
+   		try_files $uri $uri/ /camera/index.html;
+	}
+
+	location ^~ /obstablet {
+    		try_files $uri $uri/ /obstablet/index.html;
+	}
+
+	location /swimmenu {
+    	alias /usr/share/nginx/swimmenu/;
+    	index index.html;
+	}
+
+}

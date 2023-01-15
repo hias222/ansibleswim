@@ -1,0 +1,36 @@
+- hosts: all
+  roles:
+    # - test
+    - displayweb
+    # - displaylive
+    # - cameraoverlay
+    # - obscontrol
+    # - frontend
+    # - frontend2
+    ## backend
+    # - datamapping
+    # - displaysocket
+    # - displaysocket2
+    # - cassandra
+    # - datahub
+    # - datastore
+    ## rest
+    #- raspberry
+    # - common
+    # - serial-sender
+    # - serial123
+    # - serialsw
+    ## off
+    # - serviceoff
+    # - nginx
+    # - adminweb
+    # - resultdata
+    # - simplepeer
+    # - swimmenu
+    # - s3sync
+    # - nginxfrontends
+    # - laufanzeiger
+
+
+# for cloud addons -
+# ansible-playbook -i inventories/production/hosts testService.yml --limit=rpi -e mapper_cloud=true

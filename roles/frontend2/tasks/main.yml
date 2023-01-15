@@ -1,0 +1,108 @@
+- name: "frontend2  | set vars | global_clean_all {{global_clean_all}}"
+  set_fact:
+    key_value: serial_data
+    arm_architecture: true
+    clean_install: "{{global_clean_all}}"
+    frontend_base_dir: /opt/frontend2/base
+    frontend_repo: https://github.com/hias222/frontend2.git
+
+- name: frontend | Stop service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: stopped
+  ignore_errors: true
+
+- name: "frontend2  | set args for x86_64"
+  set_fact: 
+    key_value: serial_data
+    arm_architecture: false
+  when: ansible_architecture=='x86_64'
+
+- name: "frontend2  | remove dir {{frontend_base_dir}}"
+  become: true
+  file:
+    path: "{{ frontend_base_dir}}"
+    state: absent
+  when: clean_install|bool
+
+- name: "frontend2  | pm2 stop all"
+  command: pm2 stop all
+  ignore_errors: true
+
+- name: "frontend2  | create dir {{ frontend_base_dir}}"
+  become: true
+  file:
+    path: "{{ frontend_base_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "frontend2  | create dir {{ nginx_frontend_dir}}"
+  become: true
+  file:
+    path: "{{ nginx_frontend_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "frontend2  | create dir {{ rclone_base}}/{{ rclone_folder }}/frontend"
+  become: true
+  file:
+    path: "{{ rclone_base}}/{{ rclone_folder }}/frontend"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "frontend2  | git checkout {{frontend_repo}}"
+  git:
+    repo: "{{frontend_repo}}"
+    dest: "{{ frontend_base_dir}}"
+    force: yes
+
+- name: "frontend2  | Install {{ frontend_base_dir}} packages"
+  npm:
+    path: "{{ frontend_base_dir}}"
+    global: "{{ npm_gloabal_install }}"
+    state: latest
+
+- name: "frontend2  | env | copy to .env"
+  template:
+    src: .env
+    dest: "{{ frontend_base_dir}}"
+
+- name: "frontend2  | env | copy to .env.production"
+  template:
+    src: .env
+    dest: "{{ frontend_base_dir}}/.env.production"
+
+- name: "frontend2  | build {{ frontend_base_dir}}"
+  shell: 
+    cmd: npm run build
+    chdir: "{{ frontend_base_dir}}"
+
+- name:  "frontend2  | clear {{ frontend_base_dir}}"
+  become: true
+  shell: rm -rf {{nginx_frontend_dir}}/*
+
+- name: "frontend2  | cp {{frontend_base_dir}}/* to  {{nginx_frontend_dir}}"
+  become: true
+  shell: cp -rf {{frontend_base_dir}}/build/* {{nginx_frontend_dir}}
+
+- name: "frontend2  | cp {{frontend_base_dir}}/* to {{ rclone_base}}/{{ rclone_folder }}/frontend"
+  become: true
+  shell: cp -rf {{frontend_base_dir}}/build/* {{ rclone_base}}/{{ rclone_folder }}/frontend
+
+- name: "frontend2  | pm2 start all"
+  command: pm2 start all
+  ignore_errors: true
+
+- name: frontend | Stop service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: restarted
+  ignore_errors: true
