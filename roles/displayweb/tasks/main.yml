@@ -93,10 +93,15 @@
     path: "{{ displayweb_base_dir}}/.env"
     state: absent
 
+- name: Remove file (delete file)
+  ansible.builtin.file:
+    path: "{{ displayweb_base_dir}}/.env.production"
+    state: absent
+
 - name: "displayweb | env | copy environment"
   template:
     src: .env
-    dest: "{{ displayweb_base_dir}}/.env.production"
+    dest: "{{ displayweb_base_dir}}/.env"
 
 # npm rebuild node-sass ??
 
