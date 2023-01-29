@@ -12,8 +12,8 @@
   when: ansible_architecture=='x86_64'
 
 - include_tasks: frontend.yml
-
 - include_tasks: data.yml
+- include_tasks: nuvoled.yml
 
 - name: nginx | nginx | Restart service nginx
   become: true

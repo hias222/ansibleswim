@@ -1,0 +1,56 @@
+- name: "nginxfrontend | nuvoled | global_clean_all {{global_clean_all}}"
+  set_fact:
+    key_value: novoled_data
+    clean_install: "{{global_clean_all}}"
+    nuvoled_base_dir: /opt/nuvoled
+    jar_name: nuvoled.jar
+    arm_architecture: true
+    java_dir_version_name: jdk-19.0.2
+    nuvoled_java:  https://download.java.net/java/GA/jdk19.0.2/fdb695a9d9064ad6b064dc6df578380c/7/GPL/openjdk-19.0.2_linux-aarch64_bin.tar.gz
+
+- name: "adminweb | remove dir {{nuvoled_base_dir}}"
+  become: true
+  file:
+    path: "{{ nuvoled_base_dir }}"
+    state: absent
+  when: clean_install|bool
+
+- name: "nginxfrontend | nuvoled | create dir {{ nuvoled_base_dir}}"
+  become: true
+  file:
+    path: "{{ nuvoled_base_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "nginxfrontend | nuvoled | copy files/{{ jar_name }} to {{ nuvoled_base_dir}}"
+  ansible.builtin.copy:
+    src: "files/{{ jar_name }}"
+    dest: "{{ nuvoled_base_dir}}"
+    mode: '0755'
+
+- name: "nginxfrontend | nuvoled | copy  start.sh - {{ java_dir_version_name }} "
+  template:
+    src: "start.sh"
+    dest: "{{ nuvoled_base_dir}}/"
+    mode: '0775'
+
+- name: "nginxfrontend | nuvoled | Download {{ nuvoled_java }}"
+  ansible.builtin.get_url:
+    url: "{{ nuvoled_java }}"
+    dest: "{{ nuvoled_base_dir}}/java.tar.gz"
+    mode: '0440'
+
+- name: "nginxfrontend | nuvoled | Extract java"
+  ansible.builtin.shell: tar -xvf java.tar.gz
+  args:
+    chdir: "{{ nuvoled_base_dir}}"
+
+- name: "nginxfrontend | nuvoled | Create a symbolic link nuvoled.sh"
+  ansible.builtin.file:
+    src: "{{ nuvoled_base_dir}}/start.sh"
+    dest: nuvoled.sh
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: link
