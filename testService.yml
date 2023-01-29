@@ -1,14 +1,14 @@
 - hosts: all
   roles:
     # - test
-    # - displayweb
+    - displayweb
     # - displaylive
     # - cameraoverlay
     # - obscontrol
     # - frontend
     # - frontend2
     ## backend
-    - datamapping
+    # - datamapping
     # - displaysocket
     # - displaysocket2
     # - cassandra

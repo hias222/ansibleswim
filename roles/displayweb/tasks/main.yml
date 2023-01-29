@@ -114,11 +114,11 @@
      - arm_architecture|bool 
   ignore_errors: true
 
-- name: "displayweb | final build {{ displayweb_base_dir}}"
-  shell: 
-    cmd:
-      npm run build
-    chdir: "{{ displayweb_base_dir}}"
+#- name: "displayweb | final build {{ displayweb_base_dir}}"
+#  shell: 
+#    cmd:
+#      npm run build
+#    chdir: "{{ displayweb_base_dir}}"
 
 - name: "displayweb | cp {{displayweb_base_dir}}/* to  {{nginx_display_dir}}"
   become: true
