@@ -21,7 +21,8 @@ function check_ip (){
 
 # start in background
 
-check_ip 192.168
+## check_ip 192.168
+sleep 10
 
 echo Start Chromium with $URL_START
 /snap/bin/chromium --kiosk $URL_START &
