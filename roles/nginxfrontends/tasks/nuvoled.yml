@@ -36,6 +36,13 @@
     dest: "{{ nuvoled_base_dir}}/"
     mode: '0775'
 
+- name: "nginxfrontend | nuvoled | copy  start_all.sh - {{ java_dir_version_name }} "
+  template:
+    src: "start_all.sh"
+    dest: "start_all.sh"
+    mode: '0775'
+
+
 - name: "nginxfrontend | nuvoled | Download {{ nuvoled_java }}"
   ansible.builtin.get_url:
     url: "{{ nuvoled_java }}"
