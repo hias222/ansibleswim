@@ -30,5 +30,5 @@ echo Start Chromium with $URL_START
 while true
 do
 	check_ip 169.254
-	/home/rock/nuvoled.sh
+	/home/{{ ansible_facts.user_id }}/nuvoled.sh
 done

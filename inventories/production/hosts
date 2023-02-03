@@ -5,8 +5,7 @@ ubuntu ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_fil
 colorado01 ansible_ssh_port=22 ansible_ssh_user='pi' ansible_ssh_private_key_file='/Users/MFU/projects/private/schwimmen/ansibleswim/keys/id_rsa'
 18.185.34.68 ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='/Users/MFU/.aws/ec2-key-pair.pem'
 3.64.9.1 ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='/Users/MFU/.aws/ec2-key-pair.pem'
-swim.fritz.box ansible_ssh_port=22 ansible_ssh_user='pi' ansible_ssh_private_key_file='/Users/MFU/projects/private/schwimmen/ansibleswim/keys/id_rsa'
-swim2.fritz.box ansible_ssh_port=22 ansible_ssh_user='pi' ansible_ssh_private_key_file='/Users/MFU/projects/private/schwimmen/ansibleswim/keys/id_rsa'
+swim.fritz.box ansible_ssh_port=22 ansible_ssh_user='pi' ansible_ssh_private_key_file='~/.keys/id_rsa'
 jetson.fritz.box ansible_ssh_port=22 ansible_ssh_user='jetson' ansible_ssh_private_key_file='~/.keys/id_rsa'
 rockpi-4b.fritz.box ansible_ssh_port=22 ansible_ssh_user='rock' ansible_ssh_private_key_file='~/.keys/id_rsa'
 
