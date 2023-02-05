@@ -35,7 +35,7 @@ swim.fritz.box
 
 [swim:vars]
 aws_install=false
-mapper_cloud=true
+mapper_cloud=false
 nginx_domain_name=swim.fritz.box
 nginx_aws_name=www.swimdata.de
 rclone_folder=splash

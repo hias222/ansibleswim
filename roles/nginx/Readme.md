@@ -1,5 +1,12 @@
 # nginx
 
+## upload size
+
+```bash
+nginx.conf:#        client_max_body_size 1000M;
+nginx.conf:		#client_max_body_size 100G;
+```
+
 ## generate certs
 
 Not configured in scripts at the moment

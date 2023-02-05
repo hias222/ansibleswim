@@ -1,9 +1,9 @@
 - hosts: all
   roles:
-    - serial
-    - datamapping
-    - displaysocket
-    - displaysocket2
+    # - serial
+    # - datamapping
+    # - displaysocket
+    # - displaysocket2
     - nginx
     - nginxfrontends
     - resultdata
