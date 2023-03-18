@@ -50,7 +50,7 @@ mapper_cloud=false
 nginx_domain_name=jetson.fritz.box
 nginx_aws_name=www.swimdata.de
 rclone_folder=splash
-meeting_long_name="Bezirks Kurzbahn- und Sprintmeisterschaften 2022"
+meeting_long_name="2. Nürnberger März-Meeting"
 
 [rockpi]
 rockpi-4b.fritz.box
@@ -61,7 +61,7 @@ mapper_cloud=false
 nginx_domain_name=rockpi-4b.fritz.box
 nginx_aws_name=www.swimdata.de
 rclone_folder=splash
-meeting_long_name="Nürnberger Lebkuchenschwimmen"
+meeting_long_name="2. Nürnberger März-Meeting"
 
 [swim2]
 swim2.fritz.box

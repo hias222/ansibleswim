@@ -1,10 +1,10 @@
 - hosts: all
   roles:
     # - serial
-    # - datamapping
+    - datamapping
     # - displaysocket
     # - displaysocket2
-    - nginx
+    # - nginx
     - nginxfrontends
     - resultdata
     - s3sync
