@@ -127,6 +127,10 @@ server {
    		try_files $uri $uri/ /display/index.html;
 	}
 
+    location ^~ /mode {
+   		try_files $uri $uri/ /mode/index.html;
+	}
+
 	location ^~ /frontend {
    		try_files $uri $uri/ /frontend/index.html;
 	}
