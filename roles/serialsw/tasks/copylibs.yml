@@ -5,7 +5,7 @@
 - name: serialsw | set file names
   set_fact:
     key_value: serial_data
-    linux_lib_name: libftd2xx.so.1.4.8
+    linux_lib_name: libftd2xx.so.1.4.27
     linux_lib_a_name: libftd2xx.a
     linux_lib_txt_name: libftd2xx.txt
     lib_destination: /lib
