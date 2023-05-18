@@ -3,6 +3,7 @@
 ```bash
 # as root 
 cd /usr/share/nginx/html
+rm basic_frontend.tar.gz
 tar -cvzf basic_frontend.tar.gz admin/ frontend/ display/ mode/ live/ overlay/ index.html myCA.pem
 # copy
 scp jetson@jetson:/usr/share/nginx/html/basic_frontend.tar.gz .

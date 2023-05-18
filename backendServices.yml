@@ -1,14 +1,14 @@
 - hosts: all
   roles:
-    # - serial
+    - serial
     - datamapping
-    # - displaysocket
-    # - displaysocket2
-    # - nginx
+    - displaysocket
+    #- displaysocket2
+    - nginx
     - nginxfrontends
     - resultdata
-    - s3sync
-    - frontend2 # fü sync creation
+    #- s3sync
+    #- frontend2 # fü sync creation
     # - displayweb # install direct
     # - frontend2 # for sync to aws
 
