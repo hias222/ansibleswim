@@ -8,7 +8,7 @@
     # - frontend
     # - frontend2
     ## backend
-    - datamapping
+    # - datamapping
     # - displaysocket
     # - displaysocket2
     # - cassandra
@@ -23,7 +23,7 @@
     ## off
     # - serviceoff
     # - nginx
-    # - adminweb
+    - adminweb
     # - resultdata
     # - simplepeer
     # - swimmenu
