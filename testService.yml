@@ -23,12 +23,12 @@
     ## off
     # - serviceoff
     # - nginx
-    - adminweb
+    # - adminweb
     # - resultdata
     # - simplepeer
     # - swimmenu
     # - s3sync
-    # - nginxfrontends
+    - nginxfrontends
     # - laufanzeiger
 
 
