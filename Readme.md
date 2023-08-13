@@ -2,7 +2,7 @@
 
 ## overall
 
-Deploy software on e.g. raspberry with ansible
+Deploy software on e.g. raspberry with ansible remote
 
 ## decription
 
