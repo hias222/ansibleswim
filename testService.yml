@@ -1,7 +1,7 @@
 - hosts: all
   roles:
     # - test
-    # - displayweb
+    - displayweb
     # - displaylive
     # - cameraoverlay
     # - obscontrol
@@ -28,7 +28,7 @@
     # - simplepeer
     # - swimmenu
     # - s3sync
-    - nginxfrontends
+    # - nginxfrontends
     # - laufanzeiger
 
 
