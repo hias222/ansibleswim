@@ -69,6 +69,7 @@ meeting_long_name="2. Nürnberger März-Meeting"
 localhost ansible_connection=local 
 
 [self:vars]
+use_cassandra=false
 aws_install=false
 mapper_cloud=false
 nginx_domain_name=rockpie.fritz.box

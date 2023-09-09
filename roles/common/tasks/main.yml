@@ -123,6 +123,7 @@
   apt:
     pkg:
     - python
+  ignore_errors: true
 
 - name: "common | remove dir {{ npm_download_file}}"
   become: true

@@ -1,7 +1,7 @@
 - hosts: all
   roles:
     # - test
-    - displayweb
+    #- displayweb
     # - displaylive
     # - cameraoverlay
     # - obscontrol
@@ -19,7 +19,7 @@
     # - common
     # - serial-sender
     # - serial
-    # - serialsw
+    - serialsw
     ## off
     # - serviceoff
     # - nginx

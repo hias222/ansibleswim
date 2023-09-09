@@ -10,6 +10,15 @@
     linux_lib_txt_name: libftd2xx.txt
     lib_destination: /lib
 
+- name: serialsw | check linux
+  set_fact:
+    key_value: serial_data
+    linux_x86_64: true
+    ftdi_directory: linux
+  when:
+      - ansible_facts['architecture'] == "x86_64"
+      - ansible_facts['system'] == "Linux"
+
 - name: serialsw | check debian 64
   set_fact:
     key_value: serial_data

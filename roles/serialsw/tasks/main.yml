@@ -77,6 +77,15 @@
 
 # install -v -m 744 files/colorado.service "${ROOTFS_DIR}/etc/systemd/system"
 
+- name: "serialsw | cp for linux"
+  become: true
+  shell: |
+    chmod a+rwx /opt/colorado/serial/binaries/linux64/*
+    cp /opt/colorado/serial/binaries/linux64/serial /usr/bin/colorado
+  when:
+      - ansible_facts['architecture'] == "x86_64"
+      - ansible_facts['system'] == "Linux"
+
 - name: "serialsw | the binary dir"
   debug:
     msg: "binary in git directory /opt/colorado/serial/binaries/aarch64"
@@ -97,4 +106,4 @@
     name: colorado
     state: started
   when:
-      - ansible_facts['architecture'] == "aarch64"
+      - ansible_facts['architecture'] == "aarch64" or ansible_facts['architecture'] == "x86_64"
