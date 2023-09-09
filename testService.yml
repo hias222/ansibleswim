@@ -18,8 +18,8 @@
     #- raspberry
     # - common
     # - serial-sender
-    # - serial
-    - serialsw
+    - serial
+    # - serialsw
     ## off
     # - serviceoff
     # - nginx
