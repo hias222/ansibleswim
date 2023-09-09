@@ -66,10 +66,9 @@ rclone_folder=splash
 meeting_long_name="2. Nürnberger März-Meeting"
 
 [self]
-self 
+localhost ansible_connection=local 
 
 [self:vars]
-ansible_host=localhost
 aws_install=false
 mapper_cloud=false
 nginx_domain_name=rockpie.fritz.box
