@@ -87,6 +87,18 @@
     mode: '0644'
   when: use_ftdi_serial|bool
 
+- name: "serial | install service for linux base "
+  become: true
+  template:
+    src: colorado_linux.service
+    dest: /lib/systemd/system/colorado.service
+    owner: root
+    group: root
+    mode: '0644'
+  when:
+      - ansible_facts['architecture'] == "x86_64"
+      - ansible_facts['system'] == "Linux"
+
 - name: "serial | serialsw"
   import_role: 
     name: serialsw
