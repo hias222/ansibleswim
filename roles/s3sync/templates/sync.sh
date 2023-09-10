@@ -12,3 +12,5 @@ echo $LOG_FILE
 # cp /opt/shared/{{ rclone_folder }}/basedata/* /opt/shared/{{ rclone_folder }}
 
 $BASE_DIR/rclone sync --checksum /opt/shared/{{ rclone_folder }} webtiming:webtiming --config /opt/s3sync/base/rclone.conf $LOG_LEVEL --log-file=$LOG_FILE
+
+./run_invalidation_one.sh

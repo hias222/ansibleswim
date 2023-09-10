@@ -156,6 +156,12 @@
     dest: run_invalidation.sh
     mode: '0755'
 
+- name: "s3sync | run_invalidation_one.sh | copy script"
+  template:
+    src: run_invalidation_one.sh
+    dest: run_invalidation_one.sh
+    mode: '0755'
+
 - name: "s3sync | doppelt.sh | copy script"
   template:
     src: doppelt.sh
