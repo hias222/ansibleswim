@@ -1,7 +1,7 @@
 - hosts: all
   roles:
     # - test
-    #- displayweb
+    # - displayweb
     # - displaylive
     # - cameraoverlay
     # - obscontrol
@@ -18,12 +18,12 @@
     #- raspberry
     # - common
     # - serial-sender
-    - serial
+    # - serial
     # - serialsw
     ## off
     # - serviceoff
     # - nginx
-    # - adminweb
+    - adminweb
     # - resultdata
     # - simplepeer
     # - swimmenu
