@@ -1,0 +1,101 @@
+- name: "accesspoint | install base | global_clean_all {{global_clean_all}}"
+  debug: 
+    msg: "install base {{ ansible_architecture }}"
+
+- name: "accesspoint | set args"
+  set_fact:
+    key_value: npm
+    reboot_arm: false
+    arm_architecture: true
+    clean_install: "{{global_clean_all}}"
+    npm_download_file: node-v16.15.0-linux-arm64
+
+
+- name: "accesspoint | set args for x86_64"
+  set_fact: 
+    key_value: npm
+    arm_architecture: false
+    npm_download_file: node-v16.14.2-linux-x64
+  when: ansible_architecture=='x86_64'
+
+- name: "accesspoint | set args for armv7l"
+  set_fact: 
+    key_value: npm
+    arm_architecture: false
+    npm_download_file: node-v16.13.2-linux-armv7l
+  when: ansible_architecture=='armv7l'
+
+- name: "accesspoint | apt update "
+  become: true
+  apt:
+    update_cache: yes
+
+- name: accesspoint | Stop service cassandra
+  become: true
+  service:
+    name: cassandra
+    state: stopped
+  when: use_cassandra|bool
+  ignore_errors: true
+
+- name: accesspoint | disable service cassandra
+  become: true
+  service:
+    name: cassandra
+    enabled: no
+  when: use_cassandra|bool
+  ignore_errors: true
+
+- name: "accesspoint | install packages "
+  become: true
+  apt:
+    pkg:
+    - iw
+    - hostapd
+    - isc-dhcp-server
+
+- name: "accesspoint | env | copy hostapd.conf"
+  become: true
+  template:
+    src: hostapd.conf
+    dest: /etc/hostapd/hostapd.conf
+
+- name: accesspoint | start service hostapd
+  become: true
+  ansible.builtin.systemd:
+    enabled: true
+    name: hostapd
+    state: started
+    masked: false
+
+- name: "accesspoint | env | copy hostapd.conf"
+  become: true
+  template:
+    src: isc-dhcp-server
+    dest: /etc/init.d/isc-dhcp-server
+
+- name: "accesspoint | env | copy dhcpd.conf"
+  become: true
+  template:
+    src: dhcpd.conf
+    dest: /etc/dhcp/dhcpd.conf
+
+- name: "accesspoint | env | copy wlan0"
+  become: true
+  template:
+    src: wlan0
+    dest: /etc/network/interfaces.d/wlan0
+
+- name: accesspoint | start service isc-dhcp-server
+  become: true
+  ansible.builtin.systemd:
+    enabled: true
+    name: isc-dhcp-server
+    state: started
+    masked: false
+
+- name: accesspoint | start restart networking
+  become: true
+  ansible.builtin.systemd:
+    name: networking
+    state: restarted
