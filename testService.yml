@@ -28,9 +28,9 @@
     # - simplepeer
     # - swimmenu
     # - s3sync
-    # - nginxfrontends
+    - nginxfrontends
     # - laufanzeiger
-    - accesspoint
+    # - accesspoint
 
 
 # for cloud addons -

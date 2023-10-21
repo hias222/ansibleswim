@@ -8,6 +8,8 @@ tar -cvzf basic_frontend.tar.gz admin/ frontend/ display/ mode/ live/ overlay/ i
 # copy
 scp jetson@jetson:/usr/share/nginx/html/basic_frontend.tar.gz .
 scp rock@rockpi-4b:/usr/share/nginx/html/basic_frontend.tar.gz .
+scp rock@rockpie:/usr/share/nginx/html/basic_frontend.tar.gz .
+
 ```
 
 ## for nuvoled download java
