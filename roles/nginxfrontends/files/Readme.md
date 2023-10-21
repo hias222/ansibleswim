@@ -12,6 +12,7 @@ scp rock@rockpie:/usr/share/nginx/html/basic_frontend.tar.gz .
 
 # basic file here
 ~/Nextcloud/trainer/Software/installs
+cp basic_frontend.tar.gz ~/Nextcloud/trainer/Software/installs
 
 ```
 
