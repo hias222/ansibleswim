@@ -10,6 +10,9 @@ scp jetson@jetson:/usr/share/nginx/html/basic_frontend.tar.gz .
 scp rock@rockpi-4b:/usr/share/nginx/html/basic_frontend.tar.gz .
 scp rock@rockpie:/usr/share/nginx/html/basic_frontend.tar.gz .
 
+# basic file here
+~/Nextcloud/trainer/Software/installs
+
 ```
 
 ## for nuvoled download java
