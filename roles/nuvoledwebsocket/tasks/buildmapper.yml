@@ -1,0 +1,103 @@
+
+- name: "nuvoledwebsocket | {{ nuvoledwebsocket_name }} | delete dir {{ nuvoledwebsocket_base_dir }}"
+  become: true
+  file:
+    path: "{{ nuvoledwebsocket_base_dir}}"
+    state: absent
+  when: clean_install|bool
+
+- name: "nuvoledwebsocket | {{ nuvoledwebsocket_name }} | create dir {{ nuvoledwebsocket_base_dir }}"
+  become: true
+  file:
+    path: "{{ nuvoledwebsocket_base_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "nuvoledwebsocket | {{nuvoledwebsocket_name}} | delete dir {{ nuvoledwebsocket_venv}}"
+  become: true
+  file:
+    path: "{{ nuvoledwebsocket_venv}}"
+    state: absent
+  when: clean_install|bool
+
+- name: "nuvoledwebsocket | {{nuvoledwebsocket_name}} | create dir {{ nuvoledwebsocket_venv}}"
+  become: true
+  file:
+    path: "{{ nuvoledwebsocket_venv}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "nuvoledwebsocket | {{nuvoledwebsocket_name}} | git checkout {{nuvoledwebsocket_repo}}"
+  git:
+    repo: "{{nuvoledwebsocket_repo}}"
+    dest: "{{ nuvoledwebsocket_base_dir}}"
+    force: true
+
+- name: "nuvoledwebsocket | install packages "
+  become: true
+  apt:
+    pkg:
+    - pip
+    - python3.8-venv
+
+- name: "nuvoledwebsocket | Install virtualenv"
+  become: true
+  ansible.builtin.pip:
+    name: 
+      - virtualenv
+
+- name: "nuvoledwebsocket | Install build, waitress python package"
+  ansible.builtin.pip:
+    name: 
+     - build
+     - waitress
+     - flask
+     - psutil
+     - queuelib
+     - thread6
+    virtualenv: "{{ nuvoledwebsocket_venv}}"
+
+- name: "nuvoledwebsocket |  build "
+  ansible.builtin.command: "{{nuvoledwebsocket_venv}}/bin/pyproject-build"
+  args:
+    chdir: "{{nuvoledwebsocket_base_dir}}"
+
+- name: "nuvoledwebsocket | Install flaskr"
+  ansible.builtin.pip:
+    chdir: "{{ nuvoledwebsocket_base_dir}}"
+    name: 
+     - "{{ nuvoledwebsocket_base_dir}}/dist/flaskr-1.0.0-py2.py3-none-any.whl"
+    virtualenv: "{{ nuvoledwebsocket_venv}}"
+
+- name: "nuvoledwebsocket | nuvoled | copy  start_flask.sh "
+  template:
+    src: "start_flask.sh"
+    dest: "start_flask.sh"
+    mode: '0775'
+
+- name: "nuvoledwebsocket | nuvoled | copy  java_env.sh "
+  template:
+    src: "java_env.sh"
+    dest: "java_env.sh"
+    mode: '0775'
+
+- name: "nuvoledwebsocket | nuvoled | copy  pythontest.py "
+  template:
+    src: "pythontest.py"
+    dest: "{{ nuvoledwebsocket_base_dir }}/pythontest.py"
+    mode: '0775'
+
+# pm2 start "waitress-serve --call 'flaskr:create_app'" --name nuvoledwebsocket --interpreter=python3
+#- name: "nuvoledwebsocket | {{nuvoledwebsocket_name}} | pm2 start"
+#  command: |
+#    . {{ nuvoledwebsocket_venv}}/bin/activate 
+#    pm2 start "waitress-serve --call 'flaskr:create_app'" --name "{{ nuvoledwebsocket_name }}" --interpreter=python3 -f
+#  args:
+#    chdir: "{{ nuvoledwebsocket_base_dir}}"
+
+
+# install -v -m 744 files/colorado.service "${ROOTFS_DIR}/etc/systemd/system"

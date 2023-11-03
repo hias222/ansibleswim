@@ -18,17 +18,18 @@ function check_ip (){
 	done
 }
 
-
 # start in background
+# check_ip 169.254
 
-## check_ip 192.168
-sleep 10
+nohup /home/rock/start_flask.sh 2>&1 >> /home/rock/flask.out &
+sleep 5
+sudo systemctl restart nginx
 
-echo Start Chromium with $URL_START
-/snap/bin/chromium --kiosk $URL_START &
+#echo Start Chromium with $URL_START
+#/snap/bin/chromium --kiosk $URL_START &
 
-while true
-do
-	check_ip 169.254
-	/home/{{ ansible_facts.user_id }}/nuvoled.sh
-done
+#while true
+#do
+#	check_ip 169.254
+#	/home/{{ ansible_facts.user_id }}/nuvoled.sh
+#done

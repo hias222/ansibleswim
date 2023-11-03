@@ -4,9 +4,10 @@
     - datamapping
     - displaysocket
     #- displaysocket2
-    # - nginx
+    - nginx
     - nginxfrontends
     - resultdata
+    - nuvoledwebsocket
     #- s3sync
     #- frontend2 # fü sync creation
     # - displayweb # install direct

@@ -1,0 +1,14 @@
+- name: "nuvoledwebsocket | set vars | global_clean_all {{global_clean_all}} | lane count | {{ pool_lane_count }}"
+  set_fact:
+    key_value: serial_data
+    clean_install: "{{global_clean_all}}"
+    nuvoled_base_dir: /opt/nuvoled
+    java_dir_version_name: jdk-19.0.2
+    jar_name: nuvoled.jar
+    nuvoledwebsocket_name: nuvoledwebsocket
+    nuvoledwebsocket_base_dir: /opt/nuvoledwebsocket/base
+    nuvoledwebsocket_venv: /opt/nuvoledwebsocket/venv
+    nuvoledwebsocket_repo: https://github.com/Minus345/NuvoLEDWebsocket.git
+    nuvoledwebsocket_env: local
+
+- include_tasks: buildmapper.yml
