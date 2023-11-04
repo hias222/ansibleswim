@@ -21,7 +21,7 @@ function check_ip (){
 # start in background
 # check_ip 169.254
 
-nohup /home/rock/start_flask.sh 2>&1 >> /home/rock/flask.out &
+"/home/{{ ansible_facts.user_id }}/start_flask.sh" 
 sleep 5
 sudo systemctl restart nginx
 

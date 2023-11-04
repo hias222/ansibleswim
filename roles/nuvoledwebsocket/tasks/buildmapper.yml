@@ -71,6 +71,7 @@
     chdir: "{{ nuvoledwebsocket_base_dir}}"
     name: 
      - "{{ nuvoledwebsocket_base_dir}}/dist/flaskr-1.0.0-py2.py3-none-any.whl"
+    state: forcereinstall
     virtualenv: "{{ nuvoledwebsocket_venv}}"
 
 - name: "nuvoledwebsocket | nuvoled | copy  start_flask.sh "
