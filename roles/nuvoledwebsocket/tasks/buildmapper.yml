@@ -37,12 +37,21 @@
     dest: "{{ nuvoledwebsocket_base_dir}}"
     force: true
 
-- name: "nuvoledwebsocket | install packages "
+- name: "nuvoledwebsocket | install packages (ubuntu)"
   become: true
   apt:
     pkg:
     - pip
     - python3.8-venv
+  ignore_errors: true
+
+- name: "nuvoledwebsocket | install packages (ubuntu 18)"
+  become: true
+  apt:
+    pkg:
+    - python3-pip
+    - python3-venv
+  ignore_errors: true
 
 - name: "nuvoledwebsocket | Install virtualenv"
   become: true

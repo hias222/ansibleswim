@@ -8,7 +8,8 @@
     nuvoledwebsocket_name: nuvoledwebsocket
     nuvoledwebsocket_base_dir: /opt/nuvoledwebsocket/base
     nuvoledwebsocket_venv: /opt/nuvoledwebsocket/venv
-    nuvoledwebsocket_repo: https://github.com/Minus345/NuvoLEDWebsocket.git
+    #nuvoledwebsocket_repo: https://github.com/Minus345/NuvoLEDWebsocket.git
+    nuvoledwebsocket_repo: https://github.com/hias222/NuvoLEDWebsocket.git
     nuvoledwebsocket_env: local
 
 - include_tasks: buildmapper.yml

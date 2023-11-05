@@ -23,7 +23,7 @@
     ## off
     # - serviceoff
     # - nginx
-    # - adminweb
+    - adminweb
     # - resultdata
     # - simplepeer
     # - swimmenu
@@ -31,7 +31,7 @@
     # - nginxfrontends
     # - laufanzeiger
     # - accesspoint
-    - nuvoledwebsocket
+    # - nuvoledwebsocket
 
 
 # for cloud addons -
