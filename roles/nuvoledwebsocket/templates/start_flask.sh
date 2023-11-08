@@ -28,3 +28,6 @@ run_pid=$(echo $!)
 
 echo Process $run_pid started
 echo $run_pid > $PID_FILE         
+
+sleep 10
+sudo systemctl restart nginx
