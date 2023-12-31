@@ -27,11 +27,11 @@
     # - resultdata
     # - simplepeer
     # - swimmenu
-    # - s3sync
-    - nginxfrontends
+    - s3sync
+    # - nginxfrontends
     # - laufanzeiger
     # - accesspoint
-    - nuvoledwebsocket
+    # - nuvoledwebsocket
 
 
 # for cloud addons -
