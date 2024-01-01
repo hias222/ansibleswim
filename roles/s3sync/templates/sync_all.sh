@@ -2,11 +2,19 @@
 
 # JS Files are copied in role frontend2
 
+if [ $# -ne 1 ] ; then 
+    echo "illegal number of parameters"
+    echo "add meeting short name"
+    exit 1
+fi
+
+echo "using $1"
+
 # generate download json
 cd /opt/resultdata/base
 npm run generate
 echo "copy to {{ nginx_frontend_dir }}"
-sudo cp {{ rclone_base}}/{{ rclone_folder }}/frontend/downloads.json {{ nginx_frontend_dir }}
+sudo mv {{ rclone_base}}/{{ rclone_folder }}/frontend/downloads.json {{ rclone_base}}/{{ rclone_folder }}/splashdata/$1
 
 cd 
 
