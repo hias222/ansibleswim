@@ -15,7 +15,7 @@ HTTP_REST_PORT=3002
 # paste to subfolders
 # - entries
 # - certificates
-WEB_LOCAL_FILE_PATH="/opt/shared/{{rclone_folder}}/splahdata"
+WEB_LOCAL_FILE_PATH="/opt/shared/{{rclone_folder}}/splashdata"
 
 # this is backend of admin Server
 # --> upload lxf file to the Result tab

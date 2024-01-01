@@ -11,9 +11,9 @@ echo "using $1"
 
 # generate download json
 cd /opt/resultdata/base
-npm run generate
+npm run generate $1
 echo "copy to {{ nginx_frontend_dir }}"
-sudo mv {{ rclone_base }}/{{ rclone_folder }}/frontend/downloads.json {{ nginx_frontend_dir }}/../splashdata/$1
+sudo cp {{ rclone_base }}/{{ rclone_folder }}/splashdata/$1/downloads.json {{ nginx_frontend_dir }}/../splashdata/$1
 
 cd 
 

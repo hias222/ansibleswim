@@ -6,7 +6,7 @@
     # - cameraoverlay
     # - obscontrol
     # - frontend
-    # - frontend2
+    - frontend2
     ## backend
     # - datamapping
     # - displaysocket
@@ -27,7 +27,7 @@
     # - resultdata
     # - simplepeer
     # - swimmenu
-    - s3sync
+    # - s3sync
     # - nginxfrontends
     # - laufanzeiger
     # - accesspoint

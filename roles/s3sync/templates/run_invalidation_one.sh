@@ -6,4 +6,4 @@ DISTRI_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[*]
 echo distr $DISTRI_ID
 
 # with AWS_PAGER="" as the v2 migration guide stated:
-AWS_PAGER="" aws cloudfront create-invalidation --distribution-id $DISTRI_ID --paths "/*"
+AWS_PAGER="" aws cloudfront create-invalidation --distribution-id $DISTRI_ID --paths "/splashdata/**"

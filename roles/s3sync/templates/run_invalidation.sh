@@ -10,3 +10,4 @@ AWS_PAGER="" aws cloudfront create-invalidation --distribution-id $DISTRI_ID --p
 AWS_PAGER="" aws cloudfront create-invalidation --distribution-id $DISTRI_ID --paths "/frontend/*"
 AWS_PAGER="" aws cloudfront create-invalidation --distribution-id $DISTRI_ID --paths "/*"
 AWS_PAGER="" aws cloudfront create-invalidation --distribution-id $DISTRI_ID --paths "/**"
+AWS_PAGER="" aws cloudfront create-invalidation --distribution-id $DISTRI_ID --paths "/splashdata/**"
