@@ -90,7 +90,7 @@
 - name: "serial | install service for linux base "
   become: true
   template:
-    src: colorado_linux.service
+    src: colorado_linux_ftdi.service
     dest: /lib/systemd/system/colorado.service
     owner: root
     group: root
