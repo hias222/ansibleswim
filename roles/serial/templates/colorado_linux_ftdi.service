@@ -3,7 +3,7 @@ Description=colorado
 After=network.target
 
 [Service] 
-ExecStart=/usr/bin/colorado -s /dev/ttyUSB0
+ExecStart=/usr/bin/colorado -z -f
 WorkingDirectory=/opt/colorado
 StandardOutput=syslog
 StandardError=syslog

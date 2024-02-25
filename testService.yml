@@ -6,7 +6,7 @@
     # - cameraoverlay
     # - obscontrol
     # - frontend
-    - frontend2
+    # - frontend2
     ## backend
     # - datamapping
     # - displaysocket
@@ -18,7 +18,7 @@
     #- raspberry
     # - common
     # - serial-sender
-    # - serial
+    - serial
     # - serialsw
     ## off
     # - serviceoff
