@@ -18,7 +18,7 @@
     #- raspberry
     # - common
     # - serial-sender
-    - serial
+    # - serial
     # - serialsw
     ## off
     # - serviceoff
@@ -28,7 +28,7 @@
     # - simplepeer
     # - swimmenu
     # - s3sync
-    # - nginxfrontends
+    - nginxfrontends
     # - laufanzeiger
     # - accesspoint
     # - nuvoledwebsocket

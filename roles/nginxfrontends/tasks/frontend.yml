@@ -14,8 +14,8 @@
     src: "files/basic_frontend.tar.gz"
     dest: "{{ frontends_dir }}"
 
-#- name: "nginx | nginx | copy index.html to {{ nginx_html_dir}}"
-#  become: true
-#  template:
-#    src: index.html
-#    dest: "{{ nginx_html_dir}}"
+- name: "nginx | nginx | copy index.html to {{ nginx_html_dir}}"
+  become: true
+  template:
+    src: index.html
+    dest: "{{ nginx_html_dir}}"

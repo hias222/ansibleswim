@@ -1,10 +1,10 @@
 - hosts: all
   roles:
-    - serial
+    # - serial
     - datamapping
     - displaysocket
     #- displaysocket2
-    - nginx
+    # - nginx
     - nginxfrontends
     - resultdata
     - nuvoledwebsocket

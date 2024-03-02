@@ -131,6 +131,7 @@ server {
    		try_files $uri $uri/ /display/index.html;
 	}
 
+    # wird im displayweb generiert
     location ^~ /mode {
    		try_files $uri $uri/ /mode/index.html;
 	}
