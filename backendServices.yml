@@ -7,7 +7,7 @@
     # - nginx
     - nginxfrontends
     - resultdata
-    - nuvoledwebsocket
+    # - nuvoledwebsocket
     #- s3sync
     #- frontend2 # fü sync creation
     # - displayweb # install direct

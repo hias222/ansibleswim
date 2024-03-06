@@ -13,6 +13,11 @@
     resultdata_name: resultdata
     resultdata_env: local
 
+- name: "s3sync | set vars | global_clean_all {{global_clean_all}}"
+  set_fact:
+    s2sync_bin: "https://github.com/rclone/rclone/releases/download/v1.65.2/rclone-v1.65.2-linux-386.zip"
+  when: ansible_architecture=='x86_64'
+
 
 - name: "s3sync | create dir {{ s3sync_base_dir}}"
   become: true
@@ -86,7 +91,6 @@
     state: directory
     mode: '0755'
 
-
 - name: "s3sync | env | copy environment"
   template:
     src: "{{ s3sync_env }}"
@@ -94,18 +98,26 @@
 
 - name: "s3sync | link"
   ansible.builtin.shell: | 
-    rm -rf /opt/s3sync/base/rclone-*-linux-arm64
+    rm -rf /opt/s3sync/base/rclone-*-linux-*
 
 - name: "s3sync | Unarchive {{ s2sync_bin }} "
   ansible.builtin.unarchive:
     src: "{{ s2sync_bin }}"
     dest: "{{ s3sync_base_dir}}"
     remote_src: yes
+  when: not ansible_architecture=='x86_64'
+
+- name: "s3sync | Unarchive {{ s2sync_bin }} "
+  ansible.builtin.unarchive:
+    src: "{{ s2sync_bin }}"
+    dest: "{{ s3sync_base_dir}}"
+    remote_src: yes
+  when: ansible_architecture=='x86_64'
 
 - name: "s3sync | link"
   ansible.builtin.shell: | 
     rm /opt/s3sync/base/latest
-    ln -s /opt/s3sync/base/rclone-*-linux-arm64/ /opt/s3sync/base/latest
+    ln -s /opt/s3sync/base/rclone-*-linux-*/ /opt/s3sync/base/latest
 
 - name: "s3sync | samba "
   become: true
@@ -192,3 +204,31 @@
     src: encoding.sh
     dest: encoding.sh
     mode: '0755'
+
+
+- name: "s3sync | awscli copy and extract | clean_install -> true" 
+  shell: |
+    rm -rf aws/*
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
+    unzip -o awscliv2.zip >> /dev/null
+  when: 
+    - not ansible_architecture=='x86_64'
+
+- name: "s3sync | awscli copy and extract | clean_install -> true" 
+  shell: |
+    rm -rf aws/*
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    unzip -o awscliv2.zip >> /dev/null
+  when: 
+    - ansible_architecture=='x86_64'
+    # - clean_install|bool
+
+- name: "s3sync | awscli install| clean_install -> true" 
+  shell: |
+    sudo ./aws/install
+  ignore_errors: true
+
+- name: "s3sync | awscli install| clean_install -> true" 
+  shell: |
+    sudo ./aws/install --update
+  ignore_errors: true

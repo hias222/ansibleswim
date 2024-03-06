@@ -188,7 +188,18 @@
     rm -rf aws/*
     curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
     unzip -o awscliv2.zip >> /dev/null
-  when: clean_install|bool
+  when: 
+    - clean_install|bool
+    - not ansible_architecture=='x86_64'
+
+- name: "common | awscli copy and extract | clean_install -> true" 
+  shell: |
+    rm -rf aws/*
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
+    unzip -o awscliv2.zip >> /dev/null
+  when: 
+    - clean_install|bool
+    - ansible_architecture=='x86_64'
 
 - name: "common | awscli install| clean_install -> true" 
   shell: |
