@@ -1,8 +1,9 @@
 #!/bin/bash
 
 {{ nuvoled_base_dir}}/{{ java_dir_version_name }}/bin/java -jar {{ nuvoled_base_dir}}/{{ jar_name }} -h
-{{ nuvoled_base_dir}}/{{ java_dir_version_name }}/bin/java -jar {{ nuvoled_base_dir}}/{{ jar_name }} -px 1 -py 2  -br 0.6 -s 0 
+{{ nuvoled_base_dir}}/{{ java_dir_version_name }}/bin/java -jar {{ nuvoled_base_dir}}/{{ jar_name }} -px 1 -py 2  -br 0.6 -s 0 -p P5
 
+#Nuvoled Presenter
 #usage: java -jar nuvoled.jar
 # -a,--artnet <<ip>>                  enables artnet
 # -ac,--artnetChannel << 0 - 513 >>   artnet channel
@@ -14,6 +15,7 @@
 # -h,--help                           Help Message
 # -l,--list                           list available webcams
 # -o,--offset <0>                     offset (Contrast)
+# -p,--Panel <arg>                    choose Panel
 # -px,--panelsx <1>                   Number of Panels horizontal
 # -py,--panelsy <1>                   Number of Panels vertical
 # -r,--rotation <0>                   rotation degree 0/90/180/270
@@ -22,5 +24,6 @@
 # -sx,--startx <0>                    Pixel start horizontal
 # -sy,--starty <0>                    Pixal start vertical
 # -w,--webcam <<webcam name>>         use webcam as input
+
 
 
