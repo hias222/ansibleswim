@@ -1,4 +1,9 @@
-- name: "nginxfrontend | nuvoled | global_clean_all {{global_clean_all}}"
+- name: "nginxfrontend | Debug System"
+  ansible.builtin.debug:
+    msg: "Architecure {{ ansible_architecture }}"
+
+
+- name: "nginxfrontend | nuvoled | parameter all"
   set_fact:
     key_value: novoled_data
     clean_install: "{{global_clean_all}}"
@@ -9,10 +14,26 @@
     nuvoled_java:  https://download.oracle.com/java/22/latest/jdk-22_linux-aarch64_bin.tar.gz
     #nuvoled_java:  https://download.java.net/java/GA/jdk19.0.2/fdb695a9d9064ad6b064dc6df578380c/7/GPL/openjdk-19.0.2_linux-aarch64_bin.tar.gz
 
-- name: "adminweb | remove dir {{nuvoled_base_dir}}"
+
+- name: "nginxfrontend | nuvoled | parameter x86"
+  set_fact:
+    arm_architecture: false
+    java_dir_version_name: jdk-22.0.1
+    nuvoled_java:  https://download.oracle.com/java/22/latest/jdk-22_linux-x64_bin.tar.gz
+  when: 
+    - ansible_architecture=='x86_64'
+
+- name: "nginxfrontend | remove dir {{nuvoled_base_dir}}"
   become: true
   file:
     path: "{{ nuvoled_base_dir }}"
+    state: absent
+  when: clean_install|bool
+
+- name: "nginxfrontend | remove {{ nuvoled_base_dir}}/java.tar.gz"
+  become: true
+  file:
+    path: "{{ nuvoled_base_dir}}/java.tar.gz"
     state: absent
   when: clean_install|bool
 
@@ -43,17 +64,18 @@
     dest: "start_all.sh"
     mode: '0775'
 
-
 - name: "nginxfrontend | nuvoled | Download {{ nuvoled_java }}"
   ansible.builtin.get_url:
     url: "{{ nuvoled_java }}"
     dest: "{{ nuvoled_base_dir}}/java.tar.gz"
     mode: '0440'
+  when: clean_install|bool
 
 - name: "nginxfrontend | nuvoled | Extract java"
   ansible.builtin.shell: tar -xvf java.tar.gz
   args:
     chdir: "{{ nuvoled_base_dir}}"
+  when: clean_install|bool
 
 - name: "nginxfrontend | nuvoled | Create a symbolic link nuvoled.sh"
   ansible.builtin.file:
