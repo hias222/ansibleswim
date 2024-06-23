@@ -1,5 +1,6 @@
 # datamapping property file
 NUMBER_LANES={{ pool_lane_count }}
+POOL_FIRST_LANE={{ pool_first_lane_number }}
 PROPERTY_FILE=property.ini
 LENEX_BASE_DIR=/tmp
 
@@ -9,4 +10,5 @@ DEST_MQTT_HOST=localhost
 DEST_MQTT_TOPIC="mainchannel"
 HTTP_REST_PORT=3001
 
-
+# DEBUG
+# MQTT_MAPPER_DEBUG=true

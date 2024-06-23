@@ -1,4 +1,5 @@
 NUMBER_LANES={{ pool_lane_count }}
+POOL_FIRST_LANE={{ pool_first_lane_number }}
 PROPERTY_FILE=property.ini
 LENEX_BASE_DIR=/tmp
 
