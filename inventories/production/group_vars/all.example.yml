@@ -38,6 +38,7 @@ s3sync_shared_folder: /opt/shared
 
 # configurations for pool etc - not implemented yet
 pool_lane_count: 8
+pool_first_lane_number: 1
 # from top to down number 1 to xxx -> true
 pool_lane_order_normal: true
 # first lane number true = 1, false = 0
