@@ -9,6 +9,8 @@ rockpi-4b.fritz.box ansible_ssh_port=22 ansible_ssh_user='rock' ansible_ssh_priv
 rockpie.fritz.box ansible_ssh_port=22 ansible_ssh_user='rock' ansible_ssh_private_key_file='~/.keys/id_rsa'
 rasp4.fritz.box ansible_ssh_port=22 ansible_ssh_user='rock' ansible_ssh_private_key_file='~/.keys/id_rsa'
 ubuntu.fritz.box ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='~/.keys/id_rsa'
+colorado.fritz.box ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='~/.keys/id_rsa'
+
 
 [win]
 192.168.178.128
@@ -37,6 +39,17 @@ ubuntu.fritz.box
 [ubuntu:vars]
 aws_install=false
 nginx_domain_name=ubuntu.fritz.box
+nginx_aws_name=www.swimdata.de
+mapper_cloud=false
+rclone_folder=splash
+meeting_long_name="Ergebnisdienst 2024"
+
+[colorado]
+colorado.fritz.box
+
+[colorado:vars]
+aws_install=false
+nginx_domain_name=colorado.fritz.box
 nginx_aws_name=www.swimdata.de
 mapper_cloud=false
 rclone_folder=splash
