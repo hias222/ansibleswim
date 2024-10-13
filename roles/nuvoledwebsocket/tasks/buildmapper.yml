@@ -33,7 +33,7 @@
 
 - name: "nuvoledwebsocket | {{nuvoledwebsocket_name}} | git checkout {{nuvoledwebsocket_repo}}"
   git:
-    repo: "{{nuvoledwebsocket_repo}}"
+    repo: "{{ nuvoledwebsocket_repo }}"
     dest: "{{ nuvoledwebsocket_base_dir}}"
     force: true
 
@@ -42,7 +42,7 @@
   apt:
     pkg:
     - pip
-    - python3.8-venv
+    - python3-pip
   ignore_errors: true
 
 - name: "nuvoledwebsocket | install packages (ubuntu 18)"
@@ -53,13 +53,7 @@
     - python3-venv
   ignore_errors: true
 
-- name: "nuvoledwebsocket | Install virtualenv"
-  become: true
-  ansible.builtin.pip:
-    name: 
-      - virtualenv
-
-- name: "nuvoledwebsocket | Install build, waitress python package"
+- name: "nuvoledwebsocket | Install build, waitress python package in {{ nuvoledwebsocket_venv }}"
   ansible.builtin.pip:
     name: 
      - build
@@ -68,7 +62,8 @@
      - psutil
      - queuelib
      - thread6
-    virtualenv: "{{ nuvoledwebsocket_venv}}"
+    virtualenv: "{{ nuvoledwebsocket_venv }}"
+    virtualenv_command: python3 -m venv
 
 - name: "nuvoledwebsocket |  build "
   ansible.builtin.command: "{{nuvoledwebsocket_venv}}/bin/pyproject-build"
@@ -95,8 +90,8 @@
     dest: "java_env.sh"
     mode: '0775'
 
-- name: "nuvoledwebsocket | nuvoled | copy  pythontest.py "
-  template:
+- name: "nuvoledwebsocket | nuvoled | copy pythontest.py "
+  ansible.builtin.template:
     src: "pythontest.py"
     dest: "{{ nuvoledwebsocket_base_dir }}/pythontest.py"
     mode: '0775'

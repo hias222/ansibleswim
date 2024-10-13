@@ -3,13 +3,13 @@
     # - serial
     - datamapping
     - displaysocket
-    #- displaysocket2
+    # - displaysocket2
     # - nginx
     - nginxfrontends
     - resultdata
     # - nuvoledwebsocket
-    #- s3sync
-    #- frontend2 # fü sync creation
+    # - s3sync
+    - frontend2 # fü sync creation
     # - displayweb # install direct
     # - frontend2 # for sync to aws
 

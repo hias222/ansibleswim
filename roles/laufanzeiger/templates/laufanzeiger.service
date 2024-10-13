@@ -2,8 +2,9 @@
 Description=laufanzeiger
 After=network.target
 
-[Service] 
-ExecStart=/usr/bin/laufanzeiger -mqtt jetson.fritz.box
+[Service]
+Environment="APP_ENV=production"
+ExecStart=/usr/bin/laufanzeiger -mqtt localhost
 WorkingDirectory=/opt/laufanzeiger/base
 StandardOutput=syslog
 StandardError=syslog

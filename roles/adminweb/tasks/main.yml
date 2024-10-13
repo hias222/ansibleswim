@@ -61,6 +61,21 @@
     dest: "{{ adminweb_base_dir}}"
     force: yes
 
+- name: "adminweb | npm | run node -v"
+  shell: |
+    node -v
+    npx -v
+  register: shell_output
+
+- name: "common | check npm"
+  debug: 
+    msg: "{{shell_output.stdout_lines}}"
+
+- name: "adminweb | npx --yes update-browserslist-db@latest"
+  shell: 
+    cmd: npx --yes update-browserslist-db@latest
+    chdir: "{{ adminweb_base_dir}}"
+
 #- name: "adminweb | Install {{ adminweb_base_dir}} packages"
 #  npm:
 #    path: "{{ adminweb_base_dir}}"

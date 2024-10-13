@@ -10,6 +10,10 @@
     nuvoledwebsocket_venv: /opt/nuvoledwebsocket/venv
     #nuvoledwebsocket_repo: https://github.com/Minus345/NuvoLEDWebsocket.git
     nuvoledwebsocket_repo: https://github.com/hias222/NuvoLEDWebsocket.git
+    led_repo: https://github.com/hias222/nuvoled.git
+    led_base_dir: /opt/led/base
     nuvoledwebsocket_env: local
 
 - include_tasks: buildmapper.yml
+
+
