@@ -86,7 +86,7 @@ mapper_cloud=false
 nginx_domain_name=rockpi-4b.fritz.box
 nginx_aws_name=www.swimdata.de
 rclone_folder=splash
-meeting_long_name="2. Nürnberger März-Meeting"
+meeting_long_name="Fürther Kinderschwimmen"
 
 [rockpie]
 rockpie.fritz.box

@@ -5,10 +5,10 @@ server {
     listen 443 ssl;
     listen [::]:443 ssl;
 
-    index index.html index.htm index.nginx-debian.html;
 	# root /var/www/html;
     root /usr/share/nginx/html;
-	index index.html index.htm index.nginx-debian.html;
+	index index.html index.htm;
+    # index index.html index.htm index.nginx-debian.html;
 
     client_max_body_size 1000M;
 
