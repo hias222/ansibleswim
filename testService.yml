@@ -28,7 +28,7 @@
     # - simplepeer
     # - swimmenu
     # - s3sync
-    # - nginxfrontends
+    - nginxfrontends
     # - laufanzeiger
     # - accesspoint
     # - nuvoledwebsocket

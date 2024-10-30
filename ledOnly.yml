@@ -1,0 +1,12 @@
+- hosts: all
+  roles:
+    #- displaysocket
+    # - nginx
+    #- nginxfrontends
+    #- laufanzeiger
+    #- nuvoledwebsocket
+    - adminweb
+    
+
+    
+    

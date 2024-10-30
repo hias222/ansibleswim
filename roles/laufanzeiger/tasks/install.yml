@@ -50,16 +50,16 @@
     dest: "{{ laufanzeiger_base_dir}}"
     force: true
 
-- name: "laufanzeiger | go build "
-  ansible.builtin.shell: go build main.go
+- name: "laufanzeiger | go build {{ main_go }}.go"
+  ansible.builtin.shell: go build {{ main_go }}.go
   args:
     chdir: "{{ laufanzeiger_base_dir}}"
 
 - name: "laufanzeiger | cp "
   become: true
   shell: | 
-    chmod a+rwx {{ laufanzeiger_base_dir }}/main
-    cp {{ laufanzeiger_base_dir }}/main /usr/bin/laufanzeiger
+    chmod a+rwx {{ laufanzeiger_base_dir }}/{{ main_go }}
+    cp {{ laufanzeiger_base_dir }}/{{ main_go }} /usr/bin/laufanzeiger
 
 
 - name: "laufanzeiger | install service for laufanzeiger "
