@@ -24,7 +24,7 @@
     # - serviceoff
     # - nginx
     # - adminweb
-    - resultdata
+    # - resultdata
     # - simplepeer
     # - swimmenu
     # - s3sync

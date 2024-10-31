@@ -3,9 +3,9 @@
     #- displaysocket
     # - nginx
     #- nginxfrontends
-    #- laufanzeiger
+    - laufanzeiger
     #- nuvoledwebsocket
-    - adminweb
+    # - adminweb
     
 
     
