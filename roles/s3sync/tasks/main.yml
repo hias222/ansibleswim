@@ -168,6 +168,12 @@
     dest: sync_local.sh
     mode: '0755'
 
+- name: "s3sync | get_data_from_s3.sh | download script"
+  template:
+    src: get_data_from_s3.sh
+    dest: get_data_from_s3.sh
+    mode: '0755'
+
 - name: "s3sync | run_invalidation.sh | copy script"
   template:
     src: run_invalidation.sh
