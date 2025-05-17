@@ -10,5 +10,4 @@ aws.env
 password.txt
 **/all.yml
 inventories/production/group_vars/all.yml
-
 .DS_Store
