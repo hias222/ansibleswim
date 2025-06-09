@@ -12,10 +12,10 @@ ubuntu.fritz.box ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_priva
 colorado.fritz.box ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='~/.keys/id_rsa'
 
 # AWS instances
-54.93.138.20 ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='~/.aws/ec2-key-pair.pem'
+3.65.0.254 ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='~/.aws/ec2-key-pair.pem'
 
 [wsaws]
-54.93.138.20
+3.65.0.254
 
 [wsaws:vars]
 aws_install=true
@@ -91,7 +91,7 @@ rockpi-4b.fritz.box
 
 [rockpi:vars]
 aws_install=false
-mapper_cloud=false
+mapper_cloud=true
 nginx_domain_name=rockpi-4b.fritz.box
 nginx_aws_name=www.swimdata.de
 rclone_folder=splash
