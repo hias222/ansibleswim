@@ -11,3 +11,6 @@ AWS_PAGER="" aws cloudfront create-invalidation --distribution-id $DISTRI_ID --p
 AWS_PAGER="" aws cloudfront create-invalidation --distribution-id $DISTRI_ID --paths "/*"
 AWS_PAGER="" aws cloudfront create-invalidation --distribution-id $DISTRI_ID --paths "/**"
 AWS_PAGER="" aws cloudfront create-invalidation --distribution-id $DISTRI_ID --paths "/splashdata/**"
+AWS_PAGER="" aws cloudfront create-invalidation --distribution-id $DISTRI_ID --paths "/splashdata/bezirk/common/*"
+AWS_PAGER="" aws cloudfront create-invalidation --distribution-id $DISTRI_ID --paths "/splashdata/bezirk/result/*"
+AWS_PAGER="" aws cloudfront create-invalidation --distribution-id $DISTRI_ID --paths "/splashdata/bezirk/*"
