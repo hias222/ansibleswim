@@ -58,9 +58,9 @@ colorado.fritz.box
 
 [colorado:vars]
 aws_install=false
+mapper_cloud=true
 nginx_domain_name=colorado.fritz.box
 nginx_aws_name=www.swimdata.de
-mapper_cloud=false
 rclone_folder=splash
 meeting_long_name="Ergebnisdienst 2024"
 
