@@ -105,6 +105,20 @@
     - nasm #
     - dpkg #
 
+- name: "common | configure mosquitto "
+  become: true
+  ansible.builtin.template:
+    src: mosquitto.conf
+    dest: /etc/mosquitto/conf.d/no_user.conf
+    mode: '0644'
+
+- name: "common | restart mosquitto "
+  become: true
+  service:
+    name: mosquitto
+    state: restarted
+    enabled: yes
+
 - name: "common | install python2.7 for cassandra "
   become: true
   apt:
