@@ -10,9 +10,11 @@
     nuvoled_base_dir: /opt/nuvoled
     jar_name: nuvoled.jar
     arm_architecture: true
-    java_dir_version_name: jdk-23.0.1
+    # java_dir_version_name: jdk-23.0.1
+    java_dir_version_name: jdk-25.0.1
     # nuvoled_java:  https://download.oracle.com/java/22/latest/jdk-22_linux-aarch64_bin.tar.gz
-    nuvoled_java: https://download.oracle.com/java/23/latest/jdk-23_linux-aarch64_bin.tar.gz
+    # nuvoled_java: https://download.oracle.com/java/23/latest/jdk-23_linux-aarch64_bin.tar.gz
+    nuvoled_java: https://download.oracle.com/java/25/latest/jdk-25_linux-aarch64_bin.tar.gz
     #nuvoled_java:  https://download.java.net/java/GA/jdk19.0.2/fdb695a9d9064ad6b064dc6df578380c/7/GPL/openjdk-19.0.2_linux-aarch64_bin.tar.gz
 
 

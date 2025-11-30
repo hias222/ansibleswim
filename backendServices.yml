@@ -1,12 +1,12 @@
 - hosts: all
   roles:
     # - serial
-    - datamapping
-    #- displaysocket
+    # - datamapping
+    # - displaysocket
     # - displaysocket2
-    #- nginx 
+    # - nginx 
     - nginxfrontends
-    # - resultdata
+    - resultdata
     # - nuvoledwebsocket
     # - s3sync
     # - frontend2 # fü sync creation
