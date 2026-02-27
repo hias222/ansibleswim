@@ -64,17 +64,17 @@
 - name: "adminweb | npm | run node -v"
   shell: |
     node -v
-    npx -v
+    # npx -v
   register: shell_output
 
 - name: "common | check npm"
   debug: 
     msg: "{{shell_output.stdout_lines}}"
 
-- name: "adminweb | npx --yes update-browserslist-db@latest"
-  shell: 
-    cmd: npx --yes update-browserslist-db@latest
-    chdir: "{{ adminweb_base_dir}}"
+#- name: "adminweb | npx --yes update-browserslist-db@latest"
+#  shell: 
+#    cmd: npx --yes update-browserslist-db@latest
+#    chdir: "{{ adminweb_base_dir}}"
 
 #- name: "adminweb | Install {{ adminweb_base_dir}} packages"
 #  npm:
@@ -94,7 +94,6 @@
   shell: 
     cmd: npm run build
     chdir: "{{ adminweb_base_dir}}"
-  
 
 - name: "adminweb | mv {{adminweb_base_dir}} to  {{nginx_admin_dir}}"
   become: true

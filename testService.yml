@@ -9,7 +9,7 @@
     # - frontend2
     ## backend
     # - datamapping
-    - displaysocket
+    # - displaysocket
     # - displaysocket2
     # - cassandra
     # - datahub
@@ -28,7 +28,7 @@
     # - simplepeer
     # - swimmenu
     # - s3sync
-    # - nginxfrontends
+    - nginxfrontends
     # - laufanzeiger
     # - accesspoint
     # - nuvoledwebsocket
