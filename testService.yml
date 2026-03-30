@@ -19,7 +19,7 @@
     # - common
     # - serial-sender
     # - serial
-    # - serialsw
+    - serialsw
     ## off
     # - serviceoff
     # - nginx
@@ -28,7 +28,7 @@
     # - simplepeer
     # - swimmenu
     # - s3sync
-    - nginxfrontends
+    # - nginxfrontends
     # - laufanzeiger
     # - accesspoint
     # - nuvoledwebsocket
