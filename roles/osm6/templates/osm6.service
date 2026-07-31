@@ -1,0 +1,15 @@
+[Unit]
+Description=osm6
+After=network.target
+
+[Service] 
+ExecStart=/usr/bin/osm6 -x -s /dev/ttyUSB0 -d /dev/ttyUSB1
+WorkingDirectory=/opt/osm6
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=osm6
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target

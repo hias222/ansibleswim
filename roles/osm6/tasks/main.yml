@@ -1,0 +1,91 @@
+- name: osm6 | set vars
+  set_fact:
+    key_value: serial_data
+    osm6_base_dir: /opt/osm6/osm6
+    osm6_build_dir: /opt/osm6/build
+
+- name: osm6 | set vars
+  set_fact:
+    key_value: serial_data
+    serial_executable_dir: "{{osm6_base_dir}}/binaries/aarch64"
+
+# comdline.txt -relaxed
+# net.ifnames=0 dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=LABEL=writable rootfstype=ext4  elevator=deadline rootwait fixrtc iomem=relaxed
+#wget https://github.com/joan2937/pigpio/archive/master.zip
+#unzip master.zip
+#cd pigpio-master
+#make
+#sudo make install
+
+- name: osm6 | disable service serial
+  become: true
+  service:
+    name: osm6
+    enabled: no
+  ignore_errors: true
+
+- name: osm6 | disable service serial
+  become: true 
+  shell: rm -f /etc/systemd/system/osm6.service
+  ignore_errors: true
+
+- name: "osm6 | reboot"
+  become: true
+  reboot:
+    msg: "Reboot initiated by Ansible"
+    connect_timeout: 5
+    reboot_timeout: 600
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+    test_command: whoami
+  ignore_errors: true
+
+- name: "osm6 | install service "
+  become: true
+  template:
+    src: osm6.service
+    dest: /lib/systemd/system/osm6.service
+    owner: root
+    group: root
+    mode: '0644'
+  when: not use_ftdi_serial|bool
+
+- name: "osm6 | install service for ftdi "
+  become: true
+  template:
+    src: osm6_ftdi.service
+    dest: /lib/systemd/system/osm6.service
+    owner: root
+    group: root
+    mode: '0644'
+  when: use_ftdi_serial|bool
+
+- name: "osm6 | install service for linux base "
+  become: true
+  template:
+    src: osm6_linux_ftdi.service
+    dest: /lib/systemd/system/osm6.service
+    owner: root
+    group: root
+    mode: '0644'
+  when:
+      - ansible_facts['architecture'] == "x86_64"
+      - ansible_facts['system'] == "Linux"
+
+- name: "osm6 | serialsw"
+  import_role: 
+    name: osm6sw
+
+- name: osm6 | Enable service osm6
+  become: true
+  service:
+    name: osm6
+    enabled: yes
+
+- name: osm6 | Enable service serial
+  become: true
+  service:
+    name: osm6
+    state: started
+
+# install -v -m 744 files/osm6.service "${ROOTFS_DIR}/etc/systemd/system"

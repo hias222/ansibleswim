@@ -15,11 +15,13 @@
     # - datahub
     # - datastore
     ## rest
-    #- raspberry
+    # - raspberry
     # - common
     # - serial-sender
     # - serial
-    - serialsw
+    # - serialsw
+    - osm6
+    - osm6sw
     ## off
     # - serviceoff
     # - nginx

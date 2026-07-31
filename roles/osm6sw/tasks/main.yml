@@ -1,0 +1,107 @@
+- name: osm6 | set vars
+  set_fact:
+    key_value: serial_data
+    osm6_base_dir: /opt/osm6/serial
+    osm6_build_dir: /opt/osm6/build
+    linux_x86_64: false
+    linux_64_armv8: false
+    ftdi_lib_gz_name: libftd2xx-arm-v8-1.4.8.gz
+    external_lib_dir: externallib
+
+- name: "osm6 | stop osm6"
+  become: true
+  ansible.builtin.service:
+    name: osm6
+    state: stopped
+  when:
+      - ansible_facts['architecture'] == "aarch64"
+  ignore_errors: true
+
+- import_tasks: copylibs.yml
+
+# comdline.txt -relaxed
+# net.ifnames=0 dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=LABEL=writable rootfstype=ext4  elevator=deadline rootwait fixrtc iomem=relaxed
+
+- name: "osm6 | delete dir {{ osm6_base_dir}}"
+  become: true
+  file:
+    path: "{{ osm6_base_dir}}"
+    state: absent
+
+- name: "osm6 | create dir {{ osm6_base_dir}}"
+  become: true
+  file:
+    path: "{{ osm6_base_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: "osm6 | delete dir {{ osm6_build_dir}}"
+  become: true
+  file:
+    path: "{{ osm6_build_dir}}"
+    state: absent
+
+- name: "osm6 | create dir {{ osm6_build_dir}}"
+  become: true
+  file:
+    path: "{{ osm6_build_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    state: directory
+    mode: '0755'
+
+- name: osm6 | git checkout
+  git:
+    repo: https://github.com/hias222/serial.git
+    dest: "{{ osm6_base_dir}}"
+
+- name: "osm6 | gpio off"
+  copy:
+    src: "checkapi"
+    dest: "{{ osm6_base_dir}}"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    mode: '0755'
+  when: not install_gpio_libs|bool
+
+- name: "osm6 | build serial"
+  become: true
+  shell: | 
+    cd {{osm6_build_dir}}
+    cmake {{osm6_base_dir}}
+    cmake --build {{osm6_build_dir}}
+
+# install -v -m 744 files/osm6.service "${ROOTFS_DIR}/etc/systemd/system"
+
+- name: "osm6 | cp for linux"
+  become: true
+  shell: |
+    chmod a+rwx /opt/osm6/serial/binaries/linux64/*
+    cp /opt/osm6/serial/binaries/linux64/serial /usr/bin/osm6
+  when:
+      - ansible_facts['architecture'] == "x86_64"
+      - ansible_facts['system'] == "Linux"
+
+- name: "osm6 | the binary dir"
+  debug:
+    msg: "binary in git directory /opt/osm6/serial/binaries/aarch64"
+  when:
+      - ansible_facts['architecture'] == "aarch64"
+
+- name: "osm6 | change mode"
+  become: true
+  shell: | 
+    chmod a+rwx /opt/osm6/serial/binaries/aarch64/*
+    cp /opt/osm6/serial/binaries/aarch64/serial /usr/bin/osm6 
+  when:
+      - ansible_facts['architecture'] == "aarch64"
+
+- name: "osm6 | start osm6"
+  become: true
+  ansible.builtin.service:
+    name: osm6
+    state: started
+  when:
+      - ansible_facts['architecture'] == "aarch64" or ansible_facts['architecture'] == "x86_64"

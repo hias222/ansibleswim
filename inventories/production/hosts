@@ -7,9 +7,9 @@ jetson.fritz.box ansible_ssh_port=22 ansible_ssh_user='jetson' ansible_ssh_priva
 rockpi-4b.fritz.box ansible_ssh_port=22 ansible_ssh_user='rock' ansible_ssh_private_key_file='~/.keys/id_rsa'
 rockpie.fritz.box ansible_ssh_port=22 ansible_ssh_user='rock' ansible_ssh_private_key_file='~/.keys/id_rsa'
 rasp4.fritz.box ansible_ssh_port=22 ansible_ssh_user='pi' ansible_ssh_private_key_file='~/.keys/id_rsa'
-rasp5.fritz.box ansible_ssh_port=22 ansible_ssh_user='pi' ansible_ssh_private_key_file='~/.keys/id_rsa'
 ubuntu.fritz.box ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='~/.keys/id_rsa'
 colorado.fritz.box ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='~/.keys/id_rsa'
+pi5.fritz.box ansible_ssh_port=22 ansible_ssh_user='pi' ansible_ssh_private_key_file='~/.keys/id_rsa'
 
 # AWS instances
 3.65.0.254 ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='~/.aws/ec2-key-pair.pem'
@@ -120,13 +120,13 @@ nginx_aws_name=www.swimdata.de
 rclone_folder=splash
 meeting_long_name="Test"
 
-[rasp5]
-rasp5.fritz.box
+[pi5]
+pi5.fritz.box
 
-[rasp5:vars]
+[pi5:vars]
 aws_install=false
 mapper_cloud=false
-nginx_domain_name=rasp5.fritz.box
+nginx_domain_name=pi5.fritz.box
 nginx_aws_name=www.swimdata.de
 rclone_folder=splash
 meeting_long_name="Test"

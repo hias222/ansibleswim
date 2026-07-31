@@ -21,12 +21,13 @@ rtmp {
                 chunk_size 4096;
                 # allow publish 127.0.0.1;
                 # deny publish all;
+                allow publish all; 
 
                 application obs {
                         live on;
                         record off;
                         hls on;
-                        hls_path {{ nginx_html_dir}}/stream/hls;
+                        hls_path {{ nginx_html_dir}}/stream/hls_2;
                         hls_fragment 3;
                         hls_playlist_length 60;
 
@@ -34,6 +35,23 @@ rtmp {
                         dash_path {{ nginx_html_dir}}/stream/dash;
                         dash_playlist_length 10s;
                         dash_fragment 2s;
+                }
+
+                application live {
+                        live on;
+                        hls on;
+                        hls_path {{ nginx_html_dir}}/stream/hls;
+                        hls_fragment 3;
+                        hls_playlist_length 60m;
+                        hls_sync 100ms;
+                        hls_continuous on;
+                        hls_cleanup on;
+                       
+                        record all;
+                        record_path /opt/recordings;
+                        record_unique on;
+               
+                        record_suffix -%d-%b-%y-%T.flv;
                 }
         }
 }
