@@ -1,6 +1,6 @@
 - name: "common | install base | global_clean_all {{global_clean_all}}"
   debug: 
-    msg: "install base {{ ansible_architecture }}"
+    var: ansible_facts["architecture"]
 
 - name: "common | set args"
   set_fact:
@@ -20,14 +20,14 @@
     key_value: npm
     arm_architecture: false
     npm_download_file: node-v16.14.2-linux-x64
-  when: ansible_architecture=='x86_64'
+  when: ansible_facts["architecture"]=='x86_64'
 
 - name: "common | set args for armv7l"
   set_fact: 
     key_value: npm
     arm_architecture: false
     npm_download_file: node-v16.13.2-linux-armv7l
-  when: ansible_architecture=='armv7l'
+  when: ansible_facts["architecture"] | default('no') == 'armv7l'
 
 - name: "common | apt update "
   become: true
@@ -132,11 +132,11 @@
   when: not aws_install|bool
   ignore_errors: true
 
-- name: "common | install python node-sass "
+- name: "common | install python "
   become: true
   apt:
     pkg:
-    - python
+    - python3
   ignore_errors: true
 
 - name: "common | remove dir {{ npm_download_file}}"
@@ -206,7 +206,7 @@
     unzip -o awscliv2.zip >> /dev/null
   when: 
     - clean_install|bool
-    - not ansible_architecture=='x86_64'
+    - not ansible_facts["architecture"]=='x86_64'
 
 - name: "common | awscli copy and extract | clean_install -> true" 
   shell: |
@@ -215,7 +215,8 @@
     unzip -o awscliv2.zip >> /dev/null
   when: 
     - clean_install|bool
-    - ansible_architecture=='x86_64'
+    - ansible_facts["architecture"]=='x86_64'
+    # - ansible_architecture=='x86_64'
 
 - name: "common | awscli install| clean_install -> true" 
   shell: |

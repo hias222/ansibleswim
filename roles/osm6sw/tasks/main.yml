@@ -54,7 +54,7 @@
 
 - name: osm6 | git checkout
   git:
-    repo: https://github.com/hias222/serial.git
+    repo: https://github.com/hias222/osm6.git
     dest: "{{ osm6_base_dir}}"
 
 - name: "osm6 | gpio off"

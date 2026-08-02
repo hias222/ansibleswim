@@ -1,14 +1,15 @@
 - hosts: all
   roles:
-    # - serial
-    # - datamapping
-    # - displaysocket
-    # - displaysocket2
-    # - nginx 
+    - datamapping
+    - displaysocket # aktuelle Version
+    # - displaysocket2 # geht erst mal nicht
+    - nginx 
     - nginxfrontends
-    # - resultdata
+    - resultdata
     # - nuvoledwebsocket
     - s3sync
+    # - serial
+    - osm6
     # - frontend2 # fü sync creation
     # - displayweb # install direct
     # - frontend2 # for sync to aws

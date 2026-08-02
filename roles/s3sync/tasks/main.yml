@@ -218,7 +218,7 @@
     curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
     unzip -o awscliv2.zip >> /dev/null
   when: 
-    - not ansible_architecture=='x86_64'
+    - not ansible_facts["architecture"]=='x86_64'
 
 - name: "s3sync | awscli copy and extract | clean_install -> true" 
   shell: |
@@ -226,7 +226,7 @@
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
     unzip -o awscliv2.zip >> /dev/null
   when: 
-    - ansible_architecture=='x86_64'
+    - ansible_facts["architecture"]=='x86_64'
     # - clean_install|bool
 
 - name: "s3sync | awscli install| clean_install -> true" 

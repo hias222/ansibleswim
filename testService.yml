@@ -20,7 +20,7 @@
     # - serial-sender
     # - serial
     # - serialsw
-    - osm6
+    # - osm6
     - osm6sw
     ## off
     # - serviceoff

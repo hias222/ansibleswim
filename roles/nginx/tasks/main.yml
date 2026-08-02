@@ -9,7 +9,7 @@
   set_fact: 
     key_value: serial_data
     arm_architecture: false
-  when: ansible_architecture=='x86_64'
+  when: ansible_facts["architecture"]=='x86_64'
   
 - include_tasks: createCerts.yml
   when: not aws_install|bool
