@@ -1,15 +1,28 @@
 [Unit]
-Description=osm6
-After=network.target
+Description=osm6 Service
+After=network-online.target
+Wants=network-online.target
 
-[Service] 
-ExecStart=/usr/bin/osm6 -z -f
-WorkingDirectory=/opt/osm6
-StandardOutput=syslog
-StandardError=syslog
-SyslogIdentifier=osm6
-Restart=always
+[Service]
+Type=simple
 User=root
+Group=root
+WorkingDirectory=/opt/osm6
+# Zeilenweise rausschreiben!!
+ExecStart=/usr/bin/stdbuf -oL -eL /usr/bin/osm6 -z -f
+Restart=always
+RestartSec=5s
+
+# Logging (Modernisierter Standard)
+StandardOutput=journal
+StandardError=journal
+
+# Sicherheits-Härtung (Trotz Root-Rechten)
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/osm6
+PrivateTmp=true
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_SYS_RAWIO
 
 [Install]
 WantedBy=multi-user.target

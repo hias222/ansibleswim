@@ -20,8 +20,8 @@
     # - serial-sender
     # - serial
     # - serialsw
-    # - osm6
-    - osm6sw
+    - osm6
+    # - osm6sw
     ## off
     # - serviceoff
     # - nginx
