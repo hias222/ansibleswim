@@ -55,7 +55,7 @@
     global: no
     state: latest
 
-- name: "datamapping | {{datamapping_name}} | env | copy {{ datamapping_env }} to {{ datamapping_base_dir}}/.env lanes {{ pool_lane_count }}"
+- name: "datamapping | {{datamapping_name}} | env | copy {{ datamapping_env }} to {{ datamapping_base_dir}}/.env lanes {{ pool_lane_count }} start {{ pool_first_lane_number }}"
   template:
     src: "{{ datamapping_env }}"
     dest: "{{ datamapping_base_dir}}/.env"
