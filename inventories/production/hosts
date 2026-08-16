@@ -5,11 +5,10 @@ colorado01 ansible_ssh_port=22 ansible_ssh_user='pi' ansible_ssh_private_key_fil
 swim.fritz.box ansible_ssh_port=22 ansible_ssh_user='pi' ansible_ssh_private_key_file='~/.keys/id_rsa'
 jetson.fritz.box ansible_ssh_port=22 ansible_ssh_user='jetson' ansible_ssh_private_key_file='~/.keys/id_rsa'
 rock-4se.fritz.box ansible_ssh_port=22 ansible_ssh_user='rock' ansible_ssh_private_key_file='~/.keys/id_rsa'
-rockpie.fritz.box ansible_ssh_port=22 ansible_ssh_user='rock' ansible_ssh_private_key_file='~/.keys/id_rsa'
-rasp4.fritz.box ansible_ssh_port=22 ansible_ssh_user='pi' ansible_ssh_private_key_file='~/.keys/id_rsa'
 ubuntu.fritz.box ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='~/.keys/id_rsa'
 colorado.fritz.box ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='~/.keys/id_rsa'
 pi5.fritz.box ansible_ssh_port=22 ansible_ssh_user='pi' ansible_ssh_private_key_file='~/.keys/id_rsa'
+pi2.fritz.box ansible_ssh_port=22 ansible_ssh_user='pi' ansible_ssh_private_key_file='~/.keys/id_rsa'
 
 # AWS instances
 3.65.0.254 ansible_ssh_port=22 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='~/.aws/ec2-key-pair.pem'
@@ -30,17 +29,6 @@ ansible_password=max
 ansible_connection=winrm
 ansible_winrm_transport=basic
 ansible_winrm_server_cert_validation=ignore
-
-[rpi]
-ubuntu
-
-[rpi:vars]
-aws_install=false
-nginx_domain_name=ubuntu.fritz.box
-nginx_aws_name=www.swimdata.de
-mapper_cloud=true
-rclone_folder=splash
-meeting_long_name="Bezirksmeisterschaft Mittelfranken 2022"
 
 [ubuntu]
 ubuntu.fritz.box
@@ -64,17 +52,6 @@ nginx_aws_name=www.swimdata.de
 rclone_folder=splash
 meeting_long_name="Ergebnisdienst 2024"
 
-[swim]
-swim.fritz.box
-
-[swim:vars]
-aws_install=false
-mapper_cloud=false
-nginx_domain_name=swim.fritz.box
-nginx_aws_name=www.swimdata.de
-rclone_folder=splash
-meeting_long_name="Bezirks Kurzbahn- und Sprintmeisterschaften 2022"
-
 [jetson]
 jetson.fritz.box
 
@@ -97,29 +74,6 @@ nginx_aws_name=www.swimdata.de
 rclone_folder=splash
 meeting_long_name="Livetiming"
 
-[rockpie]
-rockpie.fritz.box
-
-[rockpie:vars]
-aws_install=false
-mapper_cloud=false
-nginx_domain_name=rockpie.fritz.box
-nginx_aws_name=www.swimdata.de
-rclone_folder=splash
-meeting_long_name="Pokalschwimmfest"
-
-
-[rasp4]
-rasp4.fritz.box
-
-[rasp4:vars]
-aws_install=false
-mapper_cloud=false
-nginx_domain_name=rasp4.fritz.box
-nginx_aws_name=www.swimdata.de
-rclone_folder=splash
-meeting_long_name="Test"
-
 [pi5]
 pi5.fritz.box
 
@@ -131,12 +85,16 @@ nginx_aws_name=www.swimdata.de
 rclone_folder=splash
 meeting_long_name="Ergebnisdienst"
 
-[swim2]
-swim2.fritz.box
+[pi2]
+pi2.fritz.box
 
-[swim2:vars]
+[pi2:vars]
 aws_install=false
-nginx_domain_name=swim2.fritz.box
+mapper_cloud=false
+nginx_domain_name=pi2.fritz.box
+nginx_aws_name=www.swimdata.de
+rclone_folder=splash
+meeting_long_name="Ergebnisdienst"
 
 [vmbox]
 192.168.56.103

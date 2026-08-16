@@ -1,7 +1,6 @@
 - name: "nginxfrontend | Debug System"
   ansible.builtin.debug:
-    msg: "Architecure {{ ansible_architecture }}"
-
+    msg: "Architecure {{ ansible_facts['architecture'] }}"
 
 - name: "nginxfrontend | nuvoled | parameter all"
   set_fact:
@@ -14,14 +13,13 @@
     nuvoled_java: https://download.oracle.com/java/25/latest/jdk-25_linux-aarch64_bin.tar.gz
     # nuvoled_java:  https://download.java.net/java/GA/jdk19.0.2/fdb695a9d9064ad6b064dc6df578380c/7/GPL/openjdk-19.0.2_linux-aarch64_bin.tar.gz
 
-
 - name: "nginxfrontend | nuvoled | parameter x86"
   set_fact:
     arm_architecture: false
     java_dir_version_name: jdk-22.0.1
     nuvoled_java:  https://download.oracle.com/java/22/latest/jdk-22_linux-x64_bin.tar.gz
   when: 
-    - ansible_architecture=='x86_64'
+    - ansible_facts["architecture"]=='x86_64'
 
 - name: "nginxfrontend | remove dir {{nuvoled_base_dir}}"
   become: true

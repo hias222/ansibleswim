@@ -8,7 +8,7 @@
     # - frontend
     # - frontend2
     ## backend
-    - datamapping
+    # - datamapping
     # - displaysocket
     # - displaysocket2
     # - cassandra
@@ -17,7 +17,7 @@
     ## rest
     # - raspberry
     # - common
-    # - serial-sender
+    - serial-sender
     # - serial
     # - serialsw
     # - osm6
