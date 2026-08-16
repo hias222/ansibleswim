@@ -17,14 +17,14 @@
     ## rest
     # - raspberry
     # - common
-    - serial-sender
+    # - serial-sender
     # - serial
     # - serialsw
     # - osm6
     # - osm6sw
     ## off
     # - serviceoff
-    # - nginx
+    - nginx
     # - adminweb
     # - resultdata
     # - simplepeer

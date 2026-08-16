@@ -238,3 +238,5 @@
   shell: |
     sudo ./aws/install --update
   ignore_errors: true
+
+- include_tasks: ldsync.yml 

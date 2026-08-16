@@ -10,6 +10,22 @@
     key_value: serial_data
     arm_architecture: false
   when: ansible_facts["architecture"]=='x86_64'
+
+- name: "common | install packages including php and nginx"
+  become: true
+  apt:
+    pkg:
+      - nginx-full
+      - libnginx-mod-rtmp
+      - nginx 
+      - php-fpm 
+      - php-mysql 
+      - php-cli 
+      - php-curl 
+      - php-gd 
+      - php-mbstring 
+      - php-xml 
+      - php-zip
   
 - include_tasks: createCerts.yml
   when: not aws_install|bool

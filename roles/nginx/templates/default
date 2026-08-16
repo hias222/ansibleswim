@@ -4,14 +4,19 @@ server {
 
     # root /var/www/html;
     root /usr/share/nginx/html;
-	index index.html index.htm ;
+	index index.php index.html index.htm ;
 
     client_max_body_size 1000M;
 
 	server_name _;
 
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php-fpm.sock;
+    }
+
 	location / {
-		index index.html;
+		index index.php index.html;
 		# try_files $uri /index.html =404;
 	}
 
@@ -30,15 +35,15 @@ server {
         rtmp_control all;
     }
 
-	location /dash {
-        add_header Access-Control-Allow-Origin *;
-        root {{ nginx_html_dir}}/stream;
-    }
+	#location /dash {
+    #    add_header Access-Control-Allow-Origin *;
+    #    root {{ nginx_html_dir}}/stream;
+    #}
 	
-	location /hls {
-        add_header Access-Control-Allow-Origin *;
-        root {{ nginx_html_dir}}/stream;
-    }
+	#location /hls {
+    #    add_header Access-Control-Allow-Origin *;
+    #    root {{ nginx_html_dir}}/stream;
+    #}
 
 	# admin configs
 	
