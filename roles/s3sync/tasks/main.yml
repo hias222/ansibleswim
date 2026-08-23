@@ -211,6 +211,11 @@
     dest: encoding.sh
     mode: '0755'
 
+- name: "s3sync | encoding.sh | encoding script"
+  template:
+    src: rsync_cmd.sh
+    dest: rsync_cmd.sh
+    mode: '0755'
 
 - name: "s3sync | awscli copy and extract | clean_install -> true" 
   shell: |

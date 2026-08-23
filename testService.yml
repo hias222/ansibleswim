@@ -24,12 +24,12 @@
     # - osm6sw
     ## off
     # - serviceoff
-    - nginx
+    # - nginx
     # - adminweb
     # - resultdata
     # - simplepeer
     # - swimmenu
-    # - s3sync
+    - s3sync
     # - nginxfrontends
     # - laufanzeiger
     # - accesspoint
